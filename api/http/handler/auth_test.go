@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"api/app/usecase"
+	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -17,7 +19,10 @@ func TestRequestEmail(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	h := NewAuth()
+	ctrl := gomock.NewController(t)
+	mockAuthUseCase := usecase.NewMockAuth(ctrl)
+	h := NewAuth(mockAuthUseCase)
+
 	err := h.RequestEmail(c)
 	assert.Nil(t, err)
 }
@@ -30,7 +35,10 @@ func TestRequestEmailFail(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	h := NewAuth()
+	ctrl := gomock.NewController(t)
+	mockAuthUseCase := usecase.NewMockAuth(ctrl)
+	h := NewAuth(mockAuthUseCase)
+
 	err := h.RequestEmail(c)
 	assert.NotNil(t, err)
 }

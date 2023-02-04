@@ -2,6 +2,7 @@ package handler
 
 import (
 	"api/app/entity"
+	"api/app/usecase"
 	"api/http/request"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -13,6 +14,7 @@ type Auth interface {
 }
 
 type auth struct {
+	authUseCase usecase.Auth
 }
 
 func (a auth) RequestEmail(ctx echo.Context) error {
@@ -26,10 +28,17 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
 	}
-	fmt.Println(requestEmailEntity)
+	err = a.authUseCase.RequestEmail(requestEmailEntity)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
+	}
 	return ctx.String(http.StatusOK, "Post Example")
 }
 
-func NewAuth() Auth {
-	return &auth{}
+func NewAuth(authUseCase usecase.Auth) Auth {
+	return &auth{
+		authUseCase: authUseCase,
+	}
 }

@@ -6,14 +6,19 @@ type Auth interface {
 	RequestEmail(entity.RequestEmail) error
 }
 
-type auth struct {
+type authInteractor struct {
 }
 
-func (a auth) RequestEmail(entity.RequestEmail) error {
-	//TODO implement me
+func (a authInteractor) RequestEmail(entity.RequestEmail) error {
+	/*
+		1. Emailを取得
+		2. Emailがなければ登録
+		3. Tokenを生成
+		4. Emailに対してTokenを生成
+	*/
 	panic("implement me")
 }
 
 func NewAuth() Auth {
-	return auth{}
+	return authInteractor{}
 }

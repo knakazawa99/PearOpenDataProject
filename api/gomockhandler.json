@@ -1,0 +1,34 @@
+{
+	"mocks": {
+		"app/usecase/auth_mock.go": {
+			"checksum": "PaEKGQBcp3owXhsHOjp6ow==",
+			"source_checksum": "n69Vd1IZSbj7W3FhoNVtnQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "app/usecase/auth.go",
+				"destination": "app/usecase/auth_mock.go",
+				"package": "usecase"
+			}
+		},
+		"http/handler/auth_mock.go": {
+			"checksum": "dG9UBFh7dX1vIGd0Tgu/KA==",
+			"source_checksum": "2Sdx9jzlZju0Z2Tv/kyw1g==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "http/handler/auth.go",
+				"destination": "http/handler/auth_mock.go",
+				"package": "handler"
+			}
+		},
+		"http/handler/mock/auth.go": {
+			"checksum": "ihwLvoBqUoGAc73N5LbXqw==",
+			"source_checksum": "2Sdx9jzlZju0Z2Tv/kyw1g==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "http/handler/auth.go",
+				"destination": "http/handler/mock/auth.go",
+				"package": "mhandler"
+			}
+		}
+	}
+}

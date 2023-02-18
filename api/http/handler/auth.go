@@ -1,12 +1,14 @@
 package handler
 
 import (
-	"api/app/entity"
-	"api/app/usecase"
-	"api/http/request"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
+
+	"api/domain/entity"
+	"api/http/request"
+	"api/usecase"
 )
 
 type Auth interface {
@@ -20,9 +22,9 @@ type auth struct {
 func (a auth) RequestEmail(ctx echo.Context) error {
 	req := &request.ReqeustEmail{}
 	if err := ctx.Bind(req); err != nil {
-		// error handling
+		// TODO: error handling
 	}
-	requestEmailEntity, err := entity.NewRequestEmail(req.Email)
+	requestEmailEntity, err := entity.NewAuth(req.Email)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

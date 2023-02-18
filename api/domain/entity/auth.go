@@ -2,28 +2,28 @@ package entity
 
 import (
 	"errors"
+
 	"github.com/go-playground/validator/v10"
 )
 
-var validate *validator.Validate
-
-type RequestEmail struct {
-	Email string `validate:"required,email"`
+type Auth struct {
+	Email Email
+	Token string
 }
 
-func NewRequestEmail(email string) (RequestEmail, error) {
-	validate = validator.New()
-	requestEmail := &RequestEmail{
-		Email: email,
+func NewAuth(email string) (Auth, error) {
+	validate := validator.New()
+	auth := &Auth{
+		Email: Email(email),
 	}
-	err := validate.Struct(requestEmail)
+	err := validate.Struct(auth)
 	if err != nil {
 		//if _, ok := err.(*validator.InvalidValidationError); ok {
 		//	// TODO: https://github.com/go-playground/validator/blob/master/_examples/simple/main.go
 		//	//return RequestEmail{}, echo.NewHTTPError(http.StatusUnprocessableEntity, "")
 		//}
 		//errors.New("Please Correct Email Format")
-		return RequestEmail{}, errors.New("please Correct Email Format")
+		return Auth{}, errors.New("please Correct Email Format")
 	}
-	return *requestEmail, nil
+	return *auth, nil
 }

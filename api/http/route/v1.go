@@ -1,9 +1,12 @@
 package route
 
 import (
-	"api/http/handler"
 	"context"
+
 	"github.com/labstack/echo/v4"
+
+	"api/http/handler"
+	"api/usecase"
 )
 
 type Handler struct {
@@ -12,9 +15,10 @@ type Handler struct {
 }
 
 func NewHandler(ctx context.Context) (Handler, error) {
+	authUseCase := usecase.NewAuth()
 	return Handler{
 		Example: handler.NewExample(),
-		Auth:    handler.NewAuth(),
+		Auth:    handler.NewAuth(authUseCase),
 	}, nil
 }
 
@@ -27,7 +31,7 @@ func V1(handler Handler, e *echo.Echo) {
 	example.POST("/:id", handler.Example.Post)
 
 	auth := v1.Group("/auth")
-	auth.POST("/email/request", handler.Auth.RequestEmail)
+	auth.POST("/notify/request", handler.Auth.RequestEmail)
 
 	return
 }

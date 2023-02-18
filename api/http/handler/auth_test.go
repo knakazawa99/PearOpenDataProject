@@ -1,18 +1,20 @@
 package handler
 
 import (
-	"api/app/usecase"
-	"github.com/golang/mock/gomock"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
+
+	"api/usecase"
 )
 
 func TestRequestEmail(t *testing.T) {
-	requestJson := `{"email":"test@gmail.com"}`
+	requestJson := `{"notify":"test@gmail.com"}`
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -28,7 +30,7 @@ func TestRequestEmail(t *testing.T) {
 }
 
 func TestRequestEmailFail(t *testing.T) {
-	requestJson := `{"email":"test_gmail_com"}`
+	requestJson := `{"notify":"test_gmail_com"}`
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

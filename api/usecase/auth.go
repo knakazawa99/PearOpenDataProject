@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"gorm.io/gorm"
 
 	"api/domain/entity"
@@ -11,11 +13,13 @@ import (
 
 type Auth interface {
 	RequestEmail(auth entity.Auth) error
+	DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
 }
 
 type authInteractor struct {
-	authRepository repository.Auth
-	emailSender    notify.EmailSender
+	authRepository         repository.Auth
+	downloadPearRepository repository.DownloadPear
+	emailSender            notify.EmailSender
 }
 
 func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
@@ -39,9 +43,28 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 	return nil
 }
 
-func NewAuth(authRepository repository.Auth, emailSender notify.EmailSender) Auth {
+func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
+	db := &gorm.DB{}
+	auth, err := a.authRepository.FindByEmail(db, inputDownloadPear.AuthInfo.Email)
+	if err != nil {
+		return entity.DownloadPear{}, err
+	}
+	if inputDownloadPear.AuthInfo.Token != auth.Token {
+		// TODO: Err をTokenが間違えている時に用いるエラーにする
+		return entity.DownloadPear{}, errors.New("InvalidToken")
+	}
+	downloadPear, err := a.downloadPearRepository.Find(db, inputDownloadPear)
+	if err != nil {
+		return entity.DownloadPear{}, err
+	}
+	return downloadPear, nil
+
+}
+
+func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, emailSender notify.EmailSender) Auth {
 	return authInteractor{
-		authRepository: authRepository,
-		emailSender:    emailSender,
+		authRepository:         authRepository,
+		downloadPearRepository: downloadPearRepository,
+		emailSender:            emailSender,
 	}
 }

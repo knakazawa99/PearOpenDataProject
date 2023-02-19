@@ -34,6 +34,20 @@ func (m *MockAuth) EXPECT() *MockAuthMockRecorder {
 	return m.recorder
 }
 
+// DownloadWithToken mocks base method.
+func (m *MockAuth) DownloadWithToken(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DownloadWithToken", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DownloadWithToken indicates an expected call of DownloadWithToken.
+func (mr *MockAuthMockRecorder) DownloadWithToken(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadWithToken", reflect.TypeOf((*MockAuth)(nil).DownloadWithToken), ctx)
+}
+
 // RequestEmail mocks base method.
 func (m *MockAuth) RequestEmail(ctx echo.Context) error {
 	m.ctrl.T.Helper()

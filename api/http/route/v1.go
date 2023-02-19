@@ -6,6 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"api/http/handler"
+	"api/infrastructure/notify"
+	"api/infrastructure/repository"
 	"api/usecase"
 )
 
@@ -15,7 +17,10 @@ type Handler struct {
 }
 
 func NewHandler(ctx context.Context) (Handler, error) {
-	authUseCase := usecase.NewAuth()
+	authRepository := repository.NewAuth()
+	downloadPearRepository := repository.NewDownloadPear()
+	emailSender := notify.NewEmailSender()
+	authUseCase := usecase.NewAuth(authRepository, downloadPearRepository, emailSender)
 	return Handler{
 		Example: handler.NewExample(),
 		Auth:    handler.NewAuth(authUseCase),
@@ -32,6 +37,7 @@ func V1(handler Handler, e *echo.Echo) {
 
 	auth := v1.Group("/auth")
 	auth.POST("/notify/request", handler.Auth.RequestEmail)
+	auth.POST("/download", handler.Auth.DownloadWithToken)
 
 	return
 }

@@ -9,10 +9,12 @@ import (
 	"api/domain/entity"
 	"api/http/request"
 	"api/usecase"
+	"api/utils"
 )
 
 type Auth interface {
 	RequestEmail(ctx echo.Context) error
+	DownloadWithToken(ctx echo.Context) error
 }
 
 type auth struct {
@@ -37,6 +39,26 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
 	return ctx.String(http.StatusOK, "Post Example")
+}
+
+func (a auth) DownloadWithToken(ctx echo.Context) error {
+	req := &request.TokenWithDownload{}
+	if err := ctx.Bind(req); err != nil {
+		// TODO: error handling
+	}
+	requestDownLoadWithTokenEntity, err := entity.NewDownloadPear(req.Email, req.Token, req.Version)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
+	}
+	downloadPear, err := a.authUseCase.DownloadWithToken(requestDownLoadWithTokenEntity)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
+	}
+	return ctx.Attachment(downloadPear.FileName, utils.GenerateOutPutFileName(downloadPear.FileName, downloadPear.Version))
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

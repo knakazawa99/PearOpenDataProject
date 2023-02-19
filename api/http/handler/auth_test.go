@@ -44,3 +44,20 @@ func TestRequestEmailFail(t *testing.T) {
 	err := h.RequestEmail(c)
 	assert.NotNil(t, err)
 }
+
+func TestDownloadWithToken(t *testing.T) {
+	requestJson := `{"email":"test@gmail_com", "token":"hogehoge"}`
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	ctrl := gomock.NewController(t)
+	mockAuthUseCase := usecase.NewMockAuth(ctrl)
+	mockAuthUseCase.EXPECT().DownloadWithToken(gomock.Any()).Return("test.zip", nil)
+	h := NewAuth(mockAuthUseCase)
+
+	err := h.DownloadWithToken(c)
+	assert.NotNil(t, err)
+}

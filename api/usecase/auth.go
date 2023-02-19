@@ -11,6 +11,7 @@ import (
 
 type Auth interface {
 	RequestEmail(auth entity.Auth) error
+	DownloadWithToken(auth entity.Auth) (string, error)
 }
 
 type authInteractor struct {
@@ -37,6 +38,11 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 		return err
 	}
 	return nil
+}
+
+func (a authInteractor) DownloadWithToken(auth entity.Auth) (string, error) {
+	//TODO implement me
+	return "", nil
 }
 
 func NewAuth(authRepository repository.Auth, emailSender notify.EmailSender) Auth {

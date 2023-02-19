@@ -10,6 +10,11 @@ import (
 type auth struct {
 }
 
+func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
+	//TODO implement me
+	return nil
+}
+
 func (a auth) FindByEmail(db *gorm.DB, email entity.Email) (entity.Auth, error) {
 	return entity.Auth{}, nil
 }

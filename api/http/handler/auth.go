@@ -13,6 +13,7 @@ import (
 
 type Auth interface {
 	RequestEmail(ctx echo.Context) error
+	DownloadWithToken(ctx echo.Context) error
 }
 
 type auth struct {
@@ -37,6 +38,25 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
 	return ctx.String(http.StatusOK, "Post Example")
+}
+
+func (a auth) DownloadWithToken(ctx echo.Context) error {
+	req := &request.TokenWithDownload{}
+	if err := ctx.Bind(req); err != nil {
+		// TODO: error handling
+	}
+	requestEmailEntity, err := entity.NewAuth(req.Email)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
+	}
+	requestEmailEntity.Token = req.Token
+	fileName, err := a.authUseCase.DownloadWithToken(requestEmailEntity)
+	if err != nil {
+
+	}
+	return ctx.Attachment(fileName, ".envrc")
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

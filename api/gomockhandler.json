@@ -1,0 +1,44 @@
+{
+	"mocks": {
+		"domain/repository/auth_mock.go": {
+			"checksum": "7nuKoov7ELWi92Xf86GRzQ==",
+			"source_checksum": "zPHx6y7/brL9QT7o3QDwLw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "domain/repository/auth.go",
+				"destination": "domain/repository/auth_mock.go",
+				"package": "repository"
+			}
+		},
+		"http/handler/auth_mock.go": {
+			"checksum": "dG9UBFh7dX1vIGd0Tgu/KA==",
+			"source_checksum": "GgjnCaCHaREwnXh8lvqi3g==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "http/handler/auth.go",
+				"destination": "http/handler/auth_mock.go",
+				"package": "handler"
+			}
+		},
+		"infrastructure/notify/email_mock.go": {
+			"checksum": "BBox6ZzG/ADZn9Gdr7rhLg==",
+			"source_checksum": "Mxbxz9/RodUKGcF/ewX5fA==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "infrastructure/notify/email.go",
+				"destination": "infrastructure/notify/email_mock.go",
+				"package": "notify"
+			}
+		},
+		"usecase/auth_mock.go": {
+			"checksum": "R5EqXxnYfbwsG2ikHbtdCw==",
+			"source_checksum": "3bTN/dcvpAeKmUtUXv7Xsw==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "usecase/auth.go",
+				"destination": "usecase/auth_mock.go",
+				"package": "usecase"
+			}
+		}
+	}
+}

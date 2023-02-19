@@ -9,6 +9,7 @@ import (
 	"api/domain/entity"
 	"api/http/request"
 	"api/usecase"
+	"api/utils"
 )
 
 type Auth interface {
@@ -45,18 +46,17 @@ func (a auth) DownloadWithToken(ctx echo.Context) error {
 	if err := ctx.Bind(req); err != nil {
 		// TODO: error handling
 	}
-	requestEmailEntity, err := entity.NewAuth(req.Email)
+	requestDownLoadWithTokenEntity, err := entity.NewDownloadPear(req.Email, req.Token, req.Version)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
 	}
-	requestEmailEntity.Token = req.Token
-	fileName, err := a.authUseCase.DownloadWithToken(requestEmailEntity)
+	downloadPear, err := a.authUseCase.DownloadWithToken(requestDownLoadWithTokenEntity)
 	if err != nil {
 
 	}
-	return ctx.Attachment(fileName, ".envrc")
+	return ctx.Attachment(downloadPear.FileName, utils.GenerateOutPutFileName(downloadPear.FileName, downloadPear.Version))
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

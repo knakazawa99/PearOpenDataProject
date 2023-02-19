@@ -18,8 +18,9 @@ type Handler struct {
 
 func NewHandler(ctx context.Context) (Handler, error) {
 	authRepository := repository.NewAuth()
+	downloadPearRepository := repository.NewDownloadPear()
 	emailSender := notify.NewEmailSender()
-	authUseCase := usecase.NewAuth(authRepository, emailSender)
+	authUseCase := usecase.NewAuth(authRepository, downloadPearRepository, emailSender)
 	return Handler{
 		Example: handler.NewExample(),
 		Auth:    handler.NewAuth(authUseCase),

@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
+	"api/domain/entity"
 	"api/usecase"
 )
 
@@ -46,7 +47,7 @@ func TestRequestEmailFail(t *testing.T) {
 }
 
 func TestDownloadWithToken(t *testing.T) {
-	requestJson := `{"email":"test@gmail_com", "token":"hogehoge"}`
+	requestJson := `{"email":"test@gmail_com", "token":"hogehoge", "version":"1.0.0"},`
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -55,7 +56,11 @@ func TestDownloadWithToken(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	mockAuthUseCase := usecase.NewMockAuth(ctrl)
-	mockAuthUseCase.EXPECT().DownloadWithToken(gomock.Any()).Return("test.zip", nil)
+	mockAuthUseCase.EXPECT().DownloadWithToken(gomock.Any()).Return(entity.DownloadPear{
+		AuthInfo: entity.Auth{},
+		FileName: "test.zip",
+		Version:  "1.0.0",
+	}, nil)
 	h := NewAuth(mockAuthUseCase)
 
 	err := h.DownloadWithToken(c)

@@ -54,7 +54,9 @@ func (a auth) DownloadWithToken(ctx echo.Context) error {
 	}
 	downloadPear, err := a.authUseCase.DownloadWithToken(requestDownLoadWithTokenEntity)
 	if err != nil {
-
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
 	return ctx.Attachment(downloadPear.FileName, utils.GenerateOutPutFileName(downloadPear.FileName, downloadPear.Version))
 }

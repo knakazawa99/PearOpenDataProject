@@ -5,10 +5,11 @@ import (
 
 	"api/domain/presenter"
 	"api/domain/repository"
+	"api/http/response"
 )
 
 type Pear interface {
-	GetDataVersions() ([]presenter.PearDataVersionOutput, error)
+	GetDataVersions() ([]response.PearDataVersionOutput, error)
 }
 
 type pearDataInteractor struct {
@@ -16,11 +17,11 @@ type pearDataInteractor struct {
 	pearVersionPresenter presenter.PearVersion
 }
 
-func (p pearDataInteractor) GetDataVersions() ([]presenter.PearDataVersionOutput, error) {
+func (p pearDataInteractor) GetDataVersions() ([]response.PearDataVersionOutput, error) {
 	db := &gorm.DB{}
 	pears, err := p.pearRepository.FindPears(db)
 	if err != nil {
-		return []presenter.PearDataVersionOutput{}, err
+		return []response.PearDataVersionOutput{}, err
 	}
 	return p.pearVersionPresenter.OutPutPearVersions(pears), nil
 }

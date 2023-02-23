@@ -5,7 +5,7 @@
 package usecase
 
 import (
-	presenter "api/domain/presenter"
+	response "api/http/response"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,10 +35,10 @@ func (m *MockPear) EXPECT() *MockPearMockRecorder {
 }
 
 // GetDataVersions mocks base method.
-func (m *MockPear) GetDataVersions() ([]presenter.PearDataVersionOutput, error) {
+func (m *MockPear) GetDataVersions() ([]response.PearDataVersionOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDataVersions")
-	ret0, _ := ret[0].([]presenter.PearDataVersionOutput)
+	ret0, _ := ret[0].([]response.PearDataVersionOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

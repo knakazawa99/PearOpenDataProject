@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
-	"api/domain/presenter"
+	"api/http/response"
 	"api/usecase"
 )
 
@@ -24,13 +24,13 @@ func TestPearData_GetPearVersions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPearUseCase := usecase.NewMockPear(ctrl)
 
-	mockPearDataVersionOutputs := make([]presenter.PearDataVersionOutput, 2)
-	mockPearDataVersionOutputs[0] = presenter.PearDataVersionOutput{
+	mockPearDataVersionOutputs := make([]response.PearDataVersionOutput, 2)
+	mockPearDataVersionOutputs[0] = response.PearDataVersionOutput{
 		Version:     "1.0.0",
 		ReleaseNote: "release",
 		CreatedAt:   time.Now(),
 	}
-	mockPearDataVersionOutputs[1] = presenter.PearDataVersionOutput{
+	mockPearDataVersionOutputs[1] = response.PearDataVersionOutput{
 		Version:     "1.0.1",
 		ReleaseNote: "release",
 		CreatedAt:   time.Now(),

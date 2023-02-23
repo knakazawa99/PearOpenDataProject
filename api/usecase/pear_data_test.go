@@ -9,6 +9,7 @@ import (
 	"api/domain/entity"
 	"api/domain/presenter"
 	"api/domain/repository"
+	"api/http/response"
 )
 
 func TestPearDataInteractor_GetDataVersions(t *testing.T) {
@@ -22,6 +23,6 @@ func TestPearDataInteractor_GetDataVersions(t *testing.T) {
 	pearVersionPresenter := presenter.NewPearVersion()
 	pearDataInteractor := NewPearData(mockPearRepository, pearVersionPresenter)
 	pears, err := pearDataInteractor.GetDataVersions()
-	assert.IsType(t, []presenter.PearDataVersionOutput{}, pears)
+	assert.IsType(t, []response.PearDataVersionOutput{}, pears)
 	assert.Nil(t, err)
 }

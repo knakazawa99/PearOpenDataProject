@@ -1,0 +1,28 @@
+version: "3"
+volumes:
+  db-store:
+services:
+  database:
+    image: mariadb:10.9.5
+    container_name: pear_db_container
+    volumes:
+      - db-store:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_DATABASE=pear_system
+      - MYSQL_USER=pear_system
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+  api:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    container_name: pear_api
+    volumes:
+      - ./data:/var/pear/data
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"

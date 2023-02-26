@@ -4,11 +4,15 @@ import (
 	"errors"
 
 	"github.com/go-playground/validator/v10"
+
+	"api/domain/entity/types"
 )
 
 type Auth struct {
-	Email Email
-	Token string
+	Email    Email
+	Token    string
+	Type     types.AuthType
+	Password string
 }
 
 func NewAuth(email string) (Auth, error) {

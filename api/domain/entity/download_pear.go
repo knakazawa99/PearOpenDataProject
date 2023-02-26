@@ -4,6 +4,8 @@ import (
 	"errors"
 
 	"github.com/go-playground/validator/v10"
+
+	"api/domain/entity/types"
 )
 
 type DownloadPear struct {
@@ -18,6 +20,8 @@ func NewDownloadPear(email string, token string, version string) (DownloadPear, 
 		AuthInfo: Auth{
 			Email(email),
 			token,
+			types.TypeAdmin,
+			"",
 		},
 		Version: version,
 	}

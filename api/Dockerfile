@@ -10,7 +10,8 @@ RUN go build -o api ./server.go
 
 FROM alpine:3.17 AS pear-open-api
 
-COPY --from=builder /pear-open-app/api /pear-open-api
-EXPOSE 8000
+COPY --from=builder /pear-open-app/api .
+RUN apk add --no-cache tzdata
 
-CMD ["pear-open-api"]
+EXPOSE 8000
+CMD ["./api"]

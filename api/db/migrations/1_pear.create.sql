@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS pears (
+    id int NOT NULL PRIMARY KEY,
+    version VARCHAR (50) UNIQUE NOT NULL,
+    release_note TEXT,
+    release_comment TEXT,
+    release_flag BOOLEAN,
+    file_path VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

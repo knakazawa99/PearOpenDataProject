@@ -52,10 +52,10 @@ func (a auth) FindByEmail(db *gorm.DB, email entity.Email) (entity.Auth, error) 
 	var gormAuthInformation gormmodel.GormAuthInformation
 	var gormToken gormmodel.GormToken
 	if err := db.Where("email = ?", email).Take(&gormAuthInformation).Error; err != nil {
-
+		return entity.Auth{}, err
 	}
 	if err := db.Where("auth_information_id = ?", gormAuthInformation.ID).Take(&gormToken).Error; err != nil {
-
+		return entity.Auth{}, err
 	}
 
 	return entity.Auth{

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS pears (
-    id int NOT NULL PRIMARY KEY,
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     version VARCHAR (50) UNIQUE NOT NULL,
     release_note TEXT,
     release_comment TEXT,

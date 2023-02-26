@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS auth_informations (
+CREATE TABLE IF NOT EXISTS auth_information (
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     auth_type CHAR(8),
     email CHAR(32),
@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS auth_informations (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS admin_informations (
+CREATE TABLE IF NOT EXISTS admin_information (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     auth_information_id INT,
     password CHAR(32),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (auth_information_id) REFERENCES auth_informations(id)
+    FOREIGN KEY (auth_information_id) REFERENCES auth_information(id)
 );
 
 CREATE TABLE IF NOT EXISTS tokens (
@@ -21,5 +21,5 @@ CREATE TABLE IF NOT EXISTS tokens (
     token CHAR(64),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (auth_information_id) REFERENCES auth_informations(id)
+    FOREIGN KEY (auth_information_id) REFERENCES auth_information(id)
 );

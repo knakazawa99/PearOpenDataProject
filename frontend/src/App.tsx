@@ -12,8 +12,9 @@ function App() {
   return (
     <div className="app-general">
       <header className="app-header">
-        <RouterProvider router={router} />
+        <div>洋ナシオープンデータ</div>
       </header>
+      <RouterProvider router={router} />
     </div>
   );
 }

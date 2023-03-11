@@ -7,6 +7,7 @@ import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
 import  { saveAs } from 'file-saver';
 import Loading from 'components/ui/Loading';
 import { getFileNameFromContentDisposition } from '../../../common/file';
+import { Button, FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 type PearInformation = {
   version: string
   releaseNote: string
@@ -102,59 +103,56 @@ const Version = () => {
   const [onSubmit, processing, unblocking] = useBlockDoubleClick(
     onSubmitInner,
   );
-  const handleChangeVersion = (e: ChangeEvent<HTMLSelectElement>) => {
-    // console.log(event.target.value)
-  }
 
   return <div>
     <div>
+      {isLoading ? <Loading/> : <div/>}
       <form onSubmit={handleSubmit(onSubmit)}>
-        {isLoading ? <Loading/> : <div/>}
 
         {downloadStage == 1 &&
           <div>
-          <div>
-            <label>取得するバージョン</label>
-            <select
-              id="version"
-              {...register('version')}
-              defaultValue=""
-              onChange={(e) => handleChangeVersion(e)}
-            >
-              <option value="">選択してください</option>
-              {pearInformation?.map((info, index) => (
-                <option value={info.version} key={index}>
-                  {info.version}
-                </option>
-              ))}
-            </select>
-          </div>
+            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+              <FormGroup>
+                <InputLabel id="version-label">取得するバージョン</InputLabel>
+                <Select
+                  labelId="version-label"
+                  id="version"
+                  label="取得するバージョン"
+                  {...register('version')}
+                  variant="outlined"
+                >
+                  <MenuItem value="">
+                    <em>選択してください</em>
+                  </MenuItem>
+                  {pearInformation?.map((info, index) => (
+                    <MenuItem value={info.version} key={index}>{info.version}</MenuItem>
+                  ))}
+                </Select>
+              </FormGroup>
+            </FormControl>
 
-            <div>
-            <label>メールアドレス</label>
-            <input
-              type={'email'}
-              id="email"
-              {...register('email')}
-            />
-            </div>
+            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+              <FormGroup>
+                <TextField id="email" label="メールアドレス" variant="outlined" {...register('email')} />
+              </FormGroup>
+            </FormControl>
           </div>
         }
-
 
         {downloadStage == 2 &&
           <div>
             <div>
-              <label>トークン</label>
-              <input
-                id="token"
-                {...register('token')}
-              />
+              <TextField id="token" label="トークン" variant="outlined" {...register('token')} />
             </div>
           </div>
         }
-
-        <input type="submit" value="送信" />
+        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+          >送信</Button>
+        </FormControl>
       </form>
     </div>
   </div>

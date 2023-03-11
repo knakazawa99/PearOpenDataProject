@@ -1,0 +1,16 @@
+
+li {
+    list-style: none;
+    margin: 5px;
+}
+
+ul {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.pear-example-item {
+    width: 300px;
+    height: 300px;
+}

@@ -1,10 +1,12 @@
 import React from 'react';
 import SmartLifeCharacter from 'components/ui/SmartLifeCharacter';
+import Version from 'components/features/version/Main';
 
-function Home() {
+const Home = () =>  {
   return <div>
     <div>Main Page</div>
     <SmartLifeCharacter/>
+    <Version/>
   </div>
 }
 

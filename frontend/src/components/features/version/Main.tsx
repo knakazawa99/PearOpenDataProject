@@ -1,18 +1,35 @@
-
 import axios from 'axios';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { BASE_URL } from 'config/config';
-import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
 import  { saveAs } from 'file-saver';
+import {
+  Box,
+  Button,
+  Container,
+  createTheme,
+  CssBaseline,
+  FormControl,
+  FormGroup,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  ThemeProvider,
+  Typography
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+
 import Loading from 'components/ui/Loading';
-import { getFileNameFromContentDisposition } from '../../../common/file';
-import { Button, FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { getFileNameFromContentDisposition } from 'common/file';
+import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
+import { BASE_URL } from 'config/config';
+import VersionItem from './VersionItem';
+import Grid from '@mui/material/Grid';
+
 type PearInformation = {
   version: string
   releaseNote: string
   createdAt: Date
-
 }
 
 type APIPearInformation = {
@@ -26,6 +43,8 @@ type PearDownloadFormValues = {
   email: string
   token: string
 }
+
+const theme = createTheme();
 
 const Version = () => {
   const [pearInformation, setPearInformation] = useState<PearInformation[]>()
@@ -65,7 +84,7 @@ const Version = () => {
       await axios.post(
         path,
         submitData
-      ).then((response) => {
+      ).then(() => {
         unblocking();
       })
       setDownloadStage(downloadStage ? downloadStage + 1 : 1)
@@ -92,7 +111,7 @@ const Version = () => {
         setDownloadStage(1)
         setIsLoading(false)
 
-      }).catch((reason) => {
+      }).catch(() => {
         unblocking();
         setIsLoading(false)
       })
@@ -105,56 +124,122 @@ const Version = () => {
   );
 
   return <div>
-    <div>
-      {isLoading ? <Loading/> : <div/>}
-      <form onSubmit={handleSubmit(onSubmit)}>
+    {isLoading ? <Loading/> : <div/>}
 
-        {downloadStage == 1 &&
-          <div>
-            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-              <FormGroup>
-                <InputLabel id="version-label">取得するバージョン</InputLabel>
-                <Select
-                  labelId="version-label"
-                  id="version"
-                  label="取得するバージョン"
-                  {...register('version')}
-                  variant="outlined"
+    <Container maxWidth="md">
+      <Typography
+        component="h2"
+        variant="h5"
+        align="center"
+        color="text.primary"
+        gutterBottom
+      >
+        公開済みのバージョン一覧
+      </Typography>
+      <Grid container spacing={4}>
+      {pearInformation?.map((info, index) => (
+        <VersionItem version={info}/>
+      ))}
+      </Grid>
+    </Container>
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="md">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h4">
+            データ取得リクエスト
+          </Typography>
+          {downloadStage == 1 &&
+            <Typography paragraph={true}>
+              取得したいデータのバージョンとメールアドレスを入力してください。<br/>
+              入力して送信すると、メールアドレス宛にトークンが送信されます。
+            </Typography>
+          }
+          {downloadStage == 2 &&
+            <Typography paragraph={true}>
+              メールアドレスに送信されたトークンを入力してください。
+            </Typography>
+          }
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
+
+            {downloadStage == 1 &&
+              <div>
+                <FormControl
+                  margin="normal"
+                  required
+                  fullWidth
                 >
-                  <MenuItem value="">
-                    <em>選択してください</em>
-                  </MenuItem>
-                  {pearInformation?.map((info, index) => (
-                    <MenuItem value={info.version} key={index}>{info.version}</MenuItem>
-                  ))}
-                </Select>
-              </FormGroup>
-            </FormControl>
+                  <FormGroup>
+                    <InputLabel id="version-label">取得するバージョン</InputLabel>
+                    <Select
+                      labelId="version-label"
+                      id="version"
 
-            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-              <FormGroup>
-                <TextField id="email" label="メールアドレス" variant="outlined" {...register('email')} />
-              </FormGroup>
-            </FormControl>
-          </div>
-        }
+                      label="取得するバージョン"
+                      {...register('version')}
+                      variant="outlined"
+                    >
+                      <MenuItem value="">
+                        <em>選択してください</em>
+                      </MenuItem>
+                      {pearInformation?.map((info, index) => (
+                        <MenuItem value={info.version} key={index}>{info.version}</MenuItem>
+                      ))}
+                    </Select>
+                  <FormHelperText>取得したいデータのバージョンを選択してください。</FormHelperText>
+                  </FormGroup>
+                </FormControl>
 
-        {downloadStage == 2 &&
-          <div>
-            <div>
-              <TextField id="token" label="トークン" variant="outlined" {...register('token')} />
-            </div>
-          </div>
-        }
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-          >送信</Button>
-        </FormControl>
-      </form>
-    </div>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="メールアドレス"
+                  autoComplete="email"
+                  autoFocus
+                  variant="outlined"
+                  {...register('email')}
+                />
+              </div>
+            }
+
+            {downloadStage == 2 &&
+              <div>
+                <div>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="token"
+                    label="トークン"
+                    autoFocus
+                    variant="outlined"
+                    {...register('token')}
+                  />
+                </div>
+              </div>
+            }
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              送信
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   </div>
 }
 

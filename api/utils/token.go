@@ -1,16 +1,14 @@
 package utils
 
 import (
+	"fmt"
+	"math/rand"
 	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateToken(targetString string) string {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"targetString": targetString,
-		"nbf":          time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
-	})
-	t, _ := token.SignedString([]byte("SECRET_KEY"))
-	return t
+	rand.Seed(time.Now().UnixNano())
+	// 10桁
+	randomNum := rand.Intn(9000000000) + 1000000000
+	return fmt.Sprintf("%d", randomNum)
 }

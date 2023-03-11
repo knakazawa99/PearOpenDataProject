@@ -18,24 +18,34 @@ func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
 		if err.Error() == gorm.ErrRecordNotFound.Error() {
 			gormAuthInformation = gormmodel.GormAuthInformation{
 				Email:    string(auth.Email),
-				AuthType: string(types.TypeAdmin),
+				AuthType: string(types.TypeUser),
 			}
-			if err := db.Save(&gormAuthInformation).Error; err != nil {
+			if err := db.Create(&gormAuthInformation).Error; err != nil {
 				return err
 			}
 		} else {
 			return err
 		}
 	}
-	if auth.Type == types.TypeAdmin {
-		gormToken := gormmodel.GormToken{
-			Token:             auth.Token,
-			AuthInformationID: gormAuthInformation.ID,
+	if gormAuthInformation.AuthType == string(types.TypeUser) {
+		var gormToken gormmodel.GormToken
+		if err := db.Where("auth_information_id = ?", gormAuthInformation.ID).Take(&gormToken).Error; err != nil {
+			if err.Error() == gorm.ErrRecordNotFound.Error() {
+				gormToken.Token = auth.Token
+				gormToken.AuthInformationID = gormAuthInformation.ID
+				if err := db.Create(&gormToken).Error; err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		} else {
+			gormToken.Token = auth.Token
+			if err := db.Save(&gormToken).Error; err != nil {
+				return err
+			}
 		}
-		if err := db.Save(&gormToken).Error; err != nil {
-			return err
-		}
-	} else if auth.Type == types.TypeUser {
+	} else if auth.Type == types.TypeAdmin {
 		gormAdminInformation := gormmodel.GormAdminInformation{
 			AuthInformationID: gormAuthInformation.ID,
 			Password:          auth.Password,

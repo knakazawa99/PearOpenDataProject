@@ -43,9 +43,10 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 
 func (a auth) DownloadWithToken(ctx echo.Context) error {
 	req := &request.TokenWithDownload{}
-	if err := ctx.Bind(req); err != nil {
-		// TODO: error handling
-	}
+	req.Token = ctx.QueryParam("token")
+	req.Version = ctx.QueryParam("version")
+	req.Email = ctx.QueryParam("email")
+
 	requestDownLoadWithTokenEntity, err := entity.NewDownloadPear(req.Email, req.Token, req.Version)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
@@ -58,6 +59,8 @@ func (a auth) DownloadWithToken(ctx echo.Context) error {
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
+	response := ctx.Response()
+	response.Header().Set(echo.HeaderAccessControlExposeHeaders, "Content-Disposition")
 	return ctx.Attachment(downloadPear.FileName, utils.GenerateOutPutFileName(downloadPear.FileName, downloadPear.Version))
 }
 

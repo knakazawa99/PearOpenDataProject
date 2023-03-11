@@ -6,26 +6,21 @@ const navigate = useNavigate();
 
 export let httpClient = axios.create({});
 
-const useApi = <T>(
+const useApi = async <T>(
   path: string,
   axiosFunc: () => Promise<AxiosResponse<T>>,
   initialState: T,
   handleError: ((res: any) => void) | null = null
-): T => {
+): Promise<T> => {
   const [data, setData] = useState<T>(initialState);
-  useEffect(() => {
-    const func = async () => {
-      const res = await axiosFunc().catch((err) => {
-        return err.response;
-      });
-      if (res.status !== 200) {
-        handleError ? handleError(res) : navigate("/error");
-      } else {
-        setData(res.data);
-      }
-    };
-    func();
-  }, []);
+  const res = await axiosFunc().catch((err) => {
+    return err.response;
+  });
+  if (res.status !== 200) {
+    handleError ? handleError(res) : navigate("/error");
+  } else {
+    setData(res.data);
+  }
   return data;
 };
 

@@ -23,17 +23,19 @@ type authInteractor struct {
 }
 
 func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
-	db := &gorm.DB{}
+	db, err := utils.ConnectDB()
 	auth, err := a.authRepository.FindByEmail(db, authRequest.Email)
 	if err != nil {
-		return err
+		if err.Error() != gorm.ErrRecordNotFound.Error() {
+			return err
+		}
 	}
 	auth.Token = utils.GenerateToken(string(auth.Email))
-	if auth.Email != "" {
+	if auth.Email == "" {
 		auth.Email = authRequest.Email
 	}
 
-	if err := a.authRepository.SaveAuth(db, authRequest); err != nil {
+	if err := a.authRepository.SaveAuth(db, auth); err != nil {
 		return err
 	}
 	messageContentWithToken := utils.GenerateMessageContentWithToken(auth.Token)
@@ -44,7 +46,7 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 }
 
 func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
-	db := &gorm.DB{}
+	db, err := utils.ConnectDB()
 	auth, err := a.authRepository.FindByEmail(db, inputDownloadPear.AuthInfo.Email)
 	if err != nil {
 		return entity.DownloadPear{}, err

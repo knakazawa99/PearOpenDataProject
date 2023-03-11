@@ -46,7 +46,7 @@ func V1(handler Handler, e *echo.Echo) {
 
 	auth := v1.Group("/auth")
 	auth.POST("/notify/request", handler.Auth.RequestEmail)
-	auth.POST("/download", handler.Auth.DownloadWithToken)
+	auth.GET("/download", handler.Auth.DownloadWithToken)
 
 	pear := v1.Group("/pears")
 	pear.GET("/", handler.Pear.GetPearVersions)

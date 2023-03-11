@@ -1,6 +1,7 @@
 setup:
 	go install github.com/golang/mock/mockgen@latest
 	go install github.com/sanposhiho/gomockhandler@latest
+	cp .env.example .env
 
 mock:
 	gomockhandler -config=gomockhandler.json mockgen

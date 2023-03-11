@@ -1,11 +1,11 @@
 package request
 
 type ReqeustEmail struct {
-	Email string `json:"notify"`
+	Email string `json:"email"`
 }
 
 type TokenWithDownload struct {
-	Email   string `json:"email"`
-	Token   string `json:"token"`
-	Version string `json:"version"`
+	Email   string `param:"email" json:"email"`
+	Token   string `param:"token" json:"token"`
+	Version string `param:"version" json:"version"`
 }

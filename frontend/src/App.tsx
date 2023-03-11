@@ -3,17 +3,17 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import 'App.css';
-import "index.css";
+import Copyright from 'components/ui/Copyright';
 import router from 'Rotuer';
 
-// TODO: https://zenn.dev/nakashi94/articles/f67fa9b54437da
+import 'App.css';
+import "index.css";
+
 function App() {
   return (
     <div className="app-general">
-      <header className="app-header">
-        <RouterProvider router={router} />
-      </header>
+      <RouterProvider router={router} />
+      <Copyright/>
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
   ThemeProvider,
   Typography
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 import { getFileNameFromContentDisposition } from 'common/file';
@@ -47,17 +47,27 @@ type PearDownloadFormValues = {
 }
 
 const theme = createTheme();
+const EmailValidPattern = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$";
 
 const Version = () => {
   const [pearInformation, setPearInformation] = useState<PearInformation[]>()
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [downloadStage, setDownloadStage] = useState<number>(1)
+
+  const versionRef = useRef<HTMLInputElement>(null);
+  const [versionErrorMessage, setVersionErrorMessage] = useState<string>()
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>()
+
+  const tokenRef = useRef<HTMLInputElement>(null);
+  const [tokenError, setTokenError] = useState(false);
+  const [tokenErrorMessage, setTokenErrorMessage] = useState<string>()
 
   const [isAlertMessage, setIsAlertMessage] = useState<boolean>(false)
   const [alertMessage, setAlertMessage] = useState<string>()
   const [alertMessageSeverity, setAlertMessageSeverity] = useState<AlertColor>("success")
-
 
   const { register, handleSubmit } = useForm<PearDownloadFormValues>({});
   useEffect(() => {
@@ -81,12 +91,15 @@ const Version = () => {
     submitData,
     event,
   ) => {
+    if (!formValidation()) {
+      unblocking();
+      return
+    }
     setIsLoading(true)
     event?.preventDefault();
     let path = BASE_URL
     if (downloadStage == 1) {
       path += "/v1/auth/notify/request"
-      console.log("submitData: ", submitData)
       await axios.post(
         path,
         submitData
@@ -137,14 +150,55 @@ const Version = () => {
     }
   }
 
-
   const [onSubmit, processing, unblocking] = useBlockDoubleClick(
     onSubmitInner,
   );
 
+  const formValidation = (): boolean => {
+    let valid = true;
+
+    if (downloadStage == 2) {
+      const token = tokenRef?.current
+      if (token) {
+        const ok = token?.validity.valid;
+        setTokenError(!ok)
+        valid &&= ok;
+        if (!ok) {
+          setTokenErrorMessage("トークンを入力してください")
+        } else {
+          setTokenErrorMessage("")
+        }
+      }
+      return valid
+    }
+    const version = versionRef?.current
+    if (version) {
+      const ok = version?.validity.valid;
+      valid &&= ok;
+      if (!ok) {
+        setVersionErrorMessage("取得したいバージョンを選択してください")
+      } else {
+        setVersionErrorMessage("")
+      }
+    } else {
+      setVersionErrorMessage("取得したいバージョンを選択してください")
+    }
+
+    const email = emailRef?.current;
+    if (email) {
+      const ok = email.validity.valid;
+      setEmailError(!ok);
+      valid &&= ok;
+      if (!ok) {
+        setEmailErrorMessage("メールアドレスを正しい形式で入力してください。")
+      } else {
+        setEmailErrorMessage("")
+      }
+    }
+    return valid
+  }
+
   return <div>
-
-
     <Container maxWidth="md">
       <Typography
         component="h2"
@@ -157,7 +211,7 @@ const Version = () => {
       </Typography>
       <Grid container spacing={4}>
       {pearInformation?.map((info, index) => (
-        <VersionItem version={info}/>
+        <VersionItem version={info} key={index}/>
       ))}
       </Grid>
     </Container>
@@ -198,21 +252,19 @@ const Version = () => {
                   <FormGroup>
                     <InputLabel id="version-label">取得するバージョン</InputLabel>
                     <Select
+                      required
                       labelId="version-label"
                       id="version"
-
                       label="取得するバージョン"
                       {...register('version')}
                       variant="outlined"
+                      defaultValue=""
                     >
-                      <MenuItem value="">
-                        <em>選択してください</em>
-                      </MenuItem>
                       {pearInformation?.map((info, index) => (
                         <MenuItem value={info.version} key={index}>{info.version}</MenuItem>
                       ))}
                     </Select>
-                  <FormHelperText>取得したいデータのバージョンを選択してください。</FormHelperText>
+                    <FormHelperText>{versionErrorMessage}</FormHelperText>
                   </FormGroup>
                 </FormControl>
 
@@ -220,12 +272,16 @@ const Version = () => {
                   margin="normal"
                   required
                   fullWidth
+                  type="email"
                   id="email"
                   label="メールアドレス"
                   autoComplete="email"
                   autoFocus
                   variant="outlined"
                   {...register('email')}
+                  inputRef={emailRef}
+                  inputProps={ {required: true, pattern: EmailValidPattern} }
+                  helperText={emailError ? emailErrorMessage: ""}
                 />
               </div>
             }
@@ -242,8 +298,14 @@ const Version = () => {
                     autoFocus
                     variant="outlined"
                     {...register('token')}
+                    inputRef={tokenRef}
+                    helperText={tokenError ? tokenErrorMessage: ""}
                   />
                 </div>
+                <Button
+                  onClick={() => {setDownloadStage(1)}}
+                  >メールを再送する
+                </Button>
               </div>
             }
 
@@ -252,7 +314,6 @@ const Version = () => {
               type="submit"
               fullWidth
               variant="contained"
-              loadingPosition="start"
               sx={{ mt: 3, mb: 2 }}
             >
               送信

@@ -6,3 +6,9 @@ up:
 
 down:
 	docker compose down
+
+create-gmail-token:
+	cd gmail
+	go run quickstart.go
+	cp credentials.json ../api/
+	cp token.json ../api/

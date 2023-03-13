@@ -18,6 +18,8 @@ type pearDataInteractor struct {
 
 func (p pearDataInteractor) GetDataVersions() ([]response.PearDataVersionOutput, error) {
 	db, err := utils.ConnectDB()
+	dbForClose, err := db.DB()
+	defer dbForClose.Close()
 	pears, err := p.pearRepository.FindPears(db)
 	if err != nil {
 		return []response.PearDataVersionOutput{}, err

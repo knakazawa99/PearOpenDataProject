@@ -12,6 +12,8 @@ FROM alpine:3.17 AS pear-open-api
 
 COPY --from=builder /pear-open-app/api .
 COPY --from=builder /pear-open-app/.env .
+COPY --from=builder /pear-open-app/token.json .
+COPY --from=builder /pear-open-app/credentials.json .
 
 RUN apk add --no-cache tzdata
 

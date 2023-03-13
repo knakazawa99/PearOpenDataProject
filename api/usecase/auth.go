@@ -24,6 +24,9 @@ type authInteractor struct {
 
 func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 	db, err := utils.ConnectDB()
+	dbForClose, err := db.DB()
+	defer dbForClose.Close()
+
 	auth, err := a.authRepository.FindByEmail(db, authRequest.Email)
 	if err != nil {
 		if err.Error() != gorm.ErrRecordNotFound.Error() {
@@ -47,6 +50,8 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 
 func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
 	db, err := utils.ConnectDB()
+	dbForClose, err := db.DB()
+	defer dbForClose.Close()
 	auth, err := a.authRepository.FindByEmail(db, inputDownloadPear.AuthInfo.Email)
 	if err != nil {
 		return entity.DownloadPear{}, err

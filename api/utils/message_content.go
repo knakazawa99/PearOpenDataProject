@@ -2,8 +2,12 @@ package utils
 
 import (
 	"fmt"
+	"time"
 )
 
 func GenerateMessageContentWithToken(token string) string {
-	return fmt.Sprintf("リクエストありがとうございます。\n\n認証トークンは\n\n%s\nです。", token)
+	now := time.Now()
+	return fmt.Sprintf("リクエストありがとうございます。\n\n"+
+		"認証トークンは\n\n%s\n\nです。\n\n\n"+
+		"Copyright Yamazaki Lab. Niigata Univ, All rights reserved.%v.", token, now.Year())
 }

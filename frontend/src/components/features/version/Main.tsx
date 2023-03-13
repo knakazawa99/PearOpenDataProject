@@ -1,6 +1,8 @@
 import axios from 'axios';
 import  { saveAs } from 'file-saver';
+import { LoadingButton } from '@mui/lab';
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -19,12 +21,12 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
-import Loading from 'components/ui/Loading';
 import { getFileNameFromContentDisposition } from 'common/file';
 import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
 import { BASE_URL } from 'config/config';
 import VersionItem from './VersionItem';
 import Grid from '@mui/material/Grid';
+import { AlertColor } from '@mui/material/Alert/Alert';
 
 type PearInformation = {
   version: string
@@ -51,6 +53,10 @@ const Version = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [downloadStage, setDownloadStage] = useState<number>(1)
+
+  const [isAlertMessage, setIsAlertMessage] = useState<boolean>(false)
+  const [alertMessage, setAlertMessage] = useState<string>()
+  const [alertMessageSeverity, setAlertMessageSeverity] = useState<AlertColor>("success")
 
 
   const { register, handleSubmit } = useForm<PearDownloadFormValues>({});
@@ -86,9 +92,17 @@ const Version = () => {
         submitData
       ).then(() => {
         unblocking();
+        setDownloadStage(downloadStage ? downloadStage + 1 : 1)
+        setIsLoading(false)
+        setAlertMessageSeverity("success")
+        setIsAlertMessage(true)
+        setAlertMessage("メールを送信しました！")
+      }).catch(() => {
+        setIsLoading(false)
+        setAlertMessageSeverity("error")
+        setIsAlertMessage(true)
+        setAlertMessage("メールを送信に失敗しました。")
       })
-      setDownloadStage(downloadStage ? downloadStage + 1 : 1)
-      setIsLoading(false)
     } else if (downloadStage == 2) {
       path += "/v1/auth/download?"
       const keys = Object.keys(submitData);
@@ -110,10 +124,15 @@ const Version = () => {
         saveAs(blob, fileName);
         setDownloadStage(1)
         setIsLoading(false)
-
+        setIsAlertMessage(true)
+        setAlertMessageSeverity("success")
+        setAlertMessage("ダウンロードに成功しました！")
       }).catch(() => {
         unblocking();
         setIsLoading(false)
+        setAlertMessageSeverity("error")
+        setIsAlertMessage(true)
+        setAlertMessage("ダウンロードに失敗しました。")
       })
     }
   }
@@ -124,7 +143,7 @@ const Version = () => {
   );
 
   return <div>
-    {isLoading ? <Loading/> : <div/>}
+
 
     <Container maxWidth="md">
       <Typography
@@ -228,14 +247,22 @@ const Version = () => {
               </div>
             }
 
-            <Button
+            <LoadingButton
+              loading={isLoading}
               type="submit"
               fullWidth
               variant="contained"
+              loadingPosition="start"
               sx={{ mt: 3, mb: 2 }}
             >
               送信
-            </Button>
+            </LoadingButton>
+
+            {
+              isAlertMessage ? <Alert variant="outlined" onClose={() => {setIsAlertMessage(false)}} severity={alertMessageSeverity}>{alertMessage}</Alert>
+                : <div/>
+            }
+
           </Box>
         </Box>
       </Container>

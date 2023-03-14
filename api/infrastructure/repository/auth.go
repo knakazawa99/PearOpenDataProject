@@ -29,11 +29,19 @@ func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
 	}
 	if gormAuthInformation.AuthType == string(types.TypeUser) {
 		var gormToken gormmodel.GormToken
+		var gormAuthUser gormmodel.GormAuthUser
+
 		if err := db.Where("auth_information_id = ?", gormAuthInformation.ID).Take(&gormToken).Error; err != nil {
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				gormToken.Token = auth.Token
 				gormToken.AuthInformationID = gormAuthInformation.ID
 				if err := db.Create(&gormToken).Error; err != nil {
+					return err
+				}
+				gormAuthUser.AuthInformationID = gormAuthInformation.ID
+				gormAuthUser.Organization = auth.User.Organization
+				gormAuthUser.Name = auth.User.Name
+				if err := db.Debug().Create(&gormAuthUser).Error; err != nil {
 					return err
 				}
 			} else {

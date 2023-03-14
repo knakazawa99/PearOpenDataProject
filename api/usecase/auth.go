@@ -32,6 +32,7 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 		if err.Error() != gorm.ErrRecordNotFound.Error() {
 			return err
 		}
+		auth.User = authRequest.User
 	}
 	auth.Token = utils.GenerateToken(string(auth.Email))
 	if auth.Email == "" {

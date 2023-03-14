@@ -11,15 +11,26 @@ type Auth struct {
 	Email    Email
 	Token    string
 	Type     types.AuthType
+	User     AuthUser
 	Password string
 }
 
-func NewAuth(email string) (Auth, error) {
+func NewAuth(organization string, name string, email string) (Auth, error) {
+	if organization == "" {
+		return Auth{}, errors.New("organization should not be nil")
+	}
+	if name == "" {
+		return Auth{}, errors.New("name should not be nil")
+	}
 	if match, _ := regexp.MatchString(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`, email); !match {
 		return Auth{}, errors.New("please Correct Email Format")
 	}
 	auth := &Auth{
 		Email: Email(email),
+		User: AuthUser{
+			Organization: organization,
+			Name:         name,
+		},
 	}
 	return *auth, nil
 }

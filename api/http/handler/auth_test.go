@@ -15,7 +15,7 @@ import (
 )
 
 func TestRequestEmail(t *testing.T) {
-	requestJson := `{"notify":"test@gmail.com"}`
+	requestJson := `{"organization":"Niigata Univ", "name":"Nakazawa", "email":"test@gmail.com"}`
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -31,7 +31,7 @@ func TestRequestEmail(t *testing.T) {
 }
 
 func TestRequestEmailFail(t *testing.T) {
-	requestJson := `{"notify":"test_gmail_com"}`
+	requestJson := `{"organization":"Niigata Univ", "name":"Nakazawa", "email":"test_gmail_com"}`
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(requestJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

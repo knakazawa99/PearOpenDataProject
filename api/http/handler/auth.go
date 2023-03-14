@@ -25,8 +25,9 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 	req := &request.ReqeustEmail{}
 	if err := ctx.Bind(req); err != nil {
 		// TODO: error handling
+		fmt.Println("Err: ", err)
 	}
-	requestEmailEntity, err := entity.NewAuth(req.Email)
+	requestEmailEntity, err := entity.NewAuth(req.Organization, req.Name, req.Email)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

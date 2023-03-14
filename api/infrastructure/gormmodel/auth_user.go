@@ -2,12 +2,9 @@ package gormmodel
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type GormAuthUser struct {
-	gorm.Model
 	ID                int
 	AuthInformationID int
 	Organization      string

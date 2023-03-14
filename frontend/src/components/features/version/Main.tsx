@@ -4,11 +4,11 @@ import { LoadingButton } from '@mui/lab';
 import {
   Alert,
   Box,
-  Button,
+  Button, Checkbox,
   Container,
   createTheme,
   CssBaseline,
-  FormControl,
+  FormControl, FormControlLabel,
   FormGroup,
   FormHelperText,
   InputLabel,
@@ -27,6 +27,8 @@ import { BASE_URL } from 'config/config';
 import VersionItem from './VersionItem';
 import Grid from '@mui/material/Grid';
 import { AlertColor } from '@mui/material/Alert/Alert';
+import ScrollPlayground from './Term';
+import Term from './Term';
 
 type PearInformation = {
   version: string
@@ -41,8 +43,11 @@ type APIPearInformation = {
 }
 
 type PearDownloadFormValues = {
-  version: string
+  agreement: boolean
+  organization: string
+  name: string
   email: string
+  version: string
   token: string
 }
 
@@ -54,12 +59,24 @@ const Version = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [downloadStage, setDownloadStage] = useState<number>(1)
 
-  const versionRef = useRef<HTMLInputElement>(null);
-  const [versionErrorMessage, setVersionErrorMessage] = useState<string>()
+  const [agreement, setAgreement] = useState(false)
+
+  const organizationRef = useRef<HTMLInputElement>(null);
+  const [organizationError, setOrganizationError] = useState(false);
+  const [organizationErrorMessage, setOrganizationErrorMessage] = useState<string>()
+
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const [nameError, setNameError] = useState(false);
+  const [nameErrorMessage, setNameErrorMessage] = useState<string>()
+
 
   const emailRef = useRef<HTMLInputElement>(null);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>()
+  const versionRef = useRef<HTMLInputElement>(null);
+
+  const [versionErrorMessage, setVersionErrorMessage] = useState<string>()
 
   const tokenRef = useRef<HTMLInputElement>(null);
   const [tokenError, setTokenError] = useState(false);
@@ -171,17 +188,29 @@ const Version = () => {
       }
       return valid
     }
-    const version = versionRef?.current
-    if (version) {
-      const ok = version?.validity.valid;
+
+    const organization = organizationRef?.current;
+    if (organization) {
+      const ok = organization?.validity.valid;
+      setOrganizationError(!ok);
       valid &&= ok;
       if (!ok) {
-        setVersionErrorMessage("取得したいバージョンを選択してください")
+        setOrganizationErrorMessage("組織名を入力してください")
       } else {
-        setVersionErrorMessage("")
+        setOrganizationErrorMessage("")
       }
-    } else {
-      setVersionErrorMessage("取得したいバージョンを選択してください")
+    }
+
+    const name = nameRef?.current;
+    if (name) {
+      const ok = name?.validity.valid;
+      setNameError(!ok);
+      valid &&= ok;
+      if (!ok) {
+        setNameErrorMessage("氏名を入力してください")
+      } else {
+        setNameErrorMessage("")
+      }
     }
 
     const email = emailRef?.current;
@@ -195,6 +224,20 @@ const Version = () => {
         setEmailErrorMessage("")
       }
     }
+
+    const version = versionRef?.current
+    if (version) {
+      const ok = version?.validity.valid;
+      valid &&= ok;
+      if (!ok) {
+        setVersionErrorMessage("取得したいバージョンを選択してください")
+      } else {
+        setVersionErrorMessage("")
+      }
+    } else {
+      setVersionErrorMessage("取得したいバージョンを選択してください")
+    }
+
     return valid
   }
 
@@ -244,6 +287,49 @@ const Version = () => {
 
             {downloadStage == 1 &&
               <div>
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="organization"
+                  label="組織名"
+                  autoFocus
+                  variant="outlined"
+                  {...register('organization')}
+                  inputRef={organizationRef}
+                  helperText={organizationError ? organizationErrorMessage: ""}
+                />
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  label="氏名"
+                  autoFocus
+                  variant="outlined"
+                  {...register('name')}
+                  inputRef={nameRef}
+                  helperText={nameError ? nameErrorMessage: ""}
+                />
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  type="email"
+                  id="email"
+                  label="メールアドレス"
+                  autoComplete="email"
+                  autoFocus
+                  variant="outlined"
+                  {...register('email')}
+                  inputRef={emailRef}
+                  inputProps={ {required: true, pattern: EmailValidPattern} }
+                  helperText={emailError ? emailErrorMessage: ""}
+                />
+
                 <FormControl
                   margin="normal"
                   required
@@ -267,22 +353,9 @@ const Version = () => {
                     <FormHelperText>{versionErrorMessage}</FormHelperText>
                   </FormGroup>
                 </FormControl>
+              <Term/>
 
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  type="email"
-                  id="email"
-                  label="メールアドレス"
-                  autoComplete="email"
-                  autoFocus
-                  variant="outlined"
-                  {...register('email')}
-                  inputRef={emailRef}
-                  inputProps={ {required: true, pattern: EmailValidPattern} }
-                  helperText={emailError ? emailErrorMessage: ""}
-                />
+              <FormControlLabel control={<Checkbox checked={agreement} onChange={() => setAgreement(!agreement)} />} label="利用規約に同意する" {...register('agreement')} />
               </div>
             }
 
@@ -315,6 +388,7 @@ const Version = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={downloadStage==1 && !agreement}
             >
               送信
             </LoadingButton>
@@ -323,7 +397,6 @@ const Version = () => {
               isAlertMessage ? <Alert variant="outlined" onClose={() => {setIsAlertMessage(false)}} severity={alertMessageSeverity}>{alertMessage}</Alert>
                 : <div/>
             }
-
           </Box>
         </Box>
       </Container>

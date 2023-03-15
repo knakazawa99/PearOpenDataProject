@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 
 import Home from 'components/pages/Home';
+import AdminAuth from './components/pages/AdminAuth';
 
 const router = createBrowserRouter([
   {
@@ -14,8 +15,10 @@ const router = createBrowserRouter([
     path: "/versions",
     element: <div>Versions!</div>,
   },
+  {
+    path: "/admin/signin",
+    element: AdminAuth(),
+  }
 ]);
-
-// export const navigate = useNavigate();
 
 export default router

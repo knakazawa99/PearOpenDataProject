@@ -294,7 +294,6 @@ const Version = () => {
                   fullWidth
                   id="organization"
                   label="組織名"
-                  autoFocus
                   variant="outlined"
                   {...register('organization')}
                   inputRef={organizationRef}
@@ -307,7 +306,6 @@ const Version = () => {
                   fullWidth
                   id="name"
                   label="氏名"
-                  autoFocus
                   variant="outlined"
                   {...register('name')}
                   inputRef={nameRef}
@@ -322,7 +320,6 @@ const Version = () => {
                   id="email"
                   label="メールアドレス"
                   autoComplete="email"
-                  autoFocus
                   variant="outlined"
                   {...register('email')}
                   inputRef={emailRef}

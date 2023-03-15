@@ -21,13 +21,13 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
+import { EmailValidPattern } from 'common/emailValidPattern';
 import { getFileNameFromContentDisposition } from 'common/file';
 import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
 import { BASE_URL } from 'config/config';
 import VersionItem from './VersionItem';
 import Grid from '@mui/material/Grid';
 import { AlertColor } from '@mui/material/Alert/Alert';
-import ScrollPlayground from './Term';
 import Term from './Term';
 
 type PearInformation = {
@@ -52,7 +52,6 @@ type PearDownloadFormValues = {
 }
 
 const theme = createTheme();
-const EmailValidPattern = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$";
 
 const Version = () => {
   const [pearInformation, setPearInformation] = useState<PearInformation[]>()
@@ -74,8 +73,8 @@ const Version = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>()
-  const versionRef = useRef<HTMLInputElement>(null);
 
+  const versionRef = useRef<HTMLInputElement>(null);
   const [versionErrorMessage, setVersionErrorMessage] = useState<string>()
 
   const tokenRef = useRef<HTMLInputElement>(null);

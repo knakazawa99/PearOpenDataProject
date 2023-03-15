@@ -76,6 +76,19 @@ func (a auth) FindByEmail(db *gorm.DB, email entity.Email) (entity.Auth, error) 
 		return entity.Auth{}, err
 	}
 
+	if gormAuthInformation.AuthType == string(types.TypeAdmin) {
+		var gormAdminInformation gormmodel.GormAdminInformation
+		if err := db.Where("auth_information_id = ?", gormAuthInformation.ID).Take(&gormAdminInformation).Error; err != nil {
+			return entity.Auth{}, err
+		}
+		return entity.Auth{
+			Email:    entity.Email(gormAuthInformation.Email),
+			Token:    gormToken.Token,
+			Type:     types.AuthType(gormAuthInformation.AuthType),
+			Password: gormAdminInformation.Password,
+		}, nil
+	}
+
 	return entity.Auth{
 		Email: entity.Email(gormAuthInformation.Email),
 		Token: gormToken.Token,

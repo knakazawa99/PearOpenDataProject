@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS auth_information (
 CREATE TABLE IF NOT EXISTS admin_information (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     auth_information_id INT,
-    password CHAR(32),
+    password CHAR(128),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (auth_information_id) REFERENCES auth_information(id)

@@ -11,3 +11,8 @@ type TokenWithDownload struct {
 	Token   string `param:"token" json:"token"`
 	Version string `param:"version" json:"version"`
 }
+
+type AdminAuth struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

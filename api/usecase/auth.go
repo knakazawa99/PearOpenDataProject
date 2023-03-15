@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -14,11 +15,13 @@ import (
 type Auth interface {
 	RequestEmail(auth entity.Auth) error
 	DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
+	AdminSignUp(auth entity.Auth) (string, error)
 }
 
 type authInteractor struct {
 	authRepository         repository.Auth
 	downloadPearRepository repository.DownloadPear
+	cacheRepository        repository.Cache
 	emailSender            notify.EmailSender
 }
 
@@ -69,10 +72,32 @@ func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear)
 
 }
 
-func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, emailSender notify.EmailSender) Auth {
+func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+	auth, err := a.authRepository.FindByEmail(db, requestAuth.Email)
+	if err != nil {
+		return "", err
+	}
+
+	if err := utils.CheckHashPassword(auth.Password, requestAuth.Password); err != nil {
+		return "", err
+	}
+
+	token := utils.GenerateJWT(string(requestAuth.Email))
+	if err := a.cacheRepository.Set(string(requestAuth.Email), token, time.Hour*24); err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, cacheRepository repository.Cache, emailSender notify.EmailSender) Auth {
 	return authInteractor{
 		authRepository:         authRepository,
 		downloadPearRepository: downloadPearRepository,
+		cacheRepository:        cacheRepository,
 		emailSender:            emailSender,
 	}
 }

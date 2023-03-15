@@ -22,12 +22,13 @@ func NewHandler(ctx context.Context) (Handler, error) {
 	authRepository := repository.NewAuth()
 	downloadPearRepository := repository.NewDownloadPear()
 	pearRepository := repository.NewPear()
+	cacheRepository := repository.NewCache()
 
 	emailSender := notify.NewEmailSender()
 
 	pearVersionPresenter := presenter.NewPearVersion()
 
-	authUseCase := usecase.NewAuth(authRepository, downloadPearRepository, emailSender)
+	authUseCase := usecase.NewAuth(authRepository, downloadPearRepository, cacheRepository, emailSender)
 	pearUseCase := usecase.NewPearData(pearRepository, pearVersionPresenter)
 	return Handler{
 		Example: handler.NewExample(),
@@ -50,6 +51,9 @@ func V1(handler Handler, e *echo.Echo) {
 
 	pear := v1.Group("/pears")
 	pear.GET("/", handler.Pear.GetPearVersions)
+
+	admin := v1.Group("/admin")
+	admin.POST("/signup", handler.Auth.AdminSignup)
 
 	return
 }

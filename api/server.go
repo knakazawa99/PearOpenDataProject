@@ -17,5 +17,5 @@ func main() {
 	handler, _ := route.NewHandler(ctx)
 
 	route.V1(handler, e)
-	e.Logger.Fatal(e.Start(":8000"))
+	e.Logger.Fatal(e.Start(":80"))
 }

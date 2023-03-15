@@ -1,7 +1,9 @@
 package request
 
 type ReqeustEmail struct {
-	Email string `json:"email"`
+	Organization string `json:"organization"`
+	Name         string `json:"name"`
+	Email        string `json:"email"`
 }
 
 type TokenWithDownload struct {

@@ -4,7 +4,8 @@ import {
 } from "react-router-dom";
 
 import Home from 'components/pages/Home';
-import AdminAuth from './components/pages/AdminAuth';
+import AdminAuthPage from './components/pages/AdminAuth';
+import AdminVersionPage from './components/pages/AdminVersion';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/signin",
-    element: AdminAuth(),
+    element: AdminAuthPage(),
+  },
+  {
+    path: "/admin/versions",
+    element: AdminVersionPage(),
   }
 ]);
 

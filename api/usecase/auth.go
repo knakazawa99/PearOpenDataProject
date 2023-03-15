@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -85,7 +86,7 @@ func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {
 	}
 
 	token := utils.GenerateJWT(string(requestAuth.Email))
-	if err := a.cacheRepository.Set(string(requestAuth.Email), token, 60*60*24); err != nil {
+	if err := a.cacheRepository.Set(string(requestAuth.Email), token, time.Hour*24); err != nil {
 		return "", err
 	}
 

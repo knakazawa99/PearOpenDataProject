@@ -34,3 +34,17 @@ func NewAuth(organization string, name string, email string) (Auth, error) {
 	}
 	return *auth, nil
 }
+
+func NewAdminAuth(email string, password string) (Auth, error) {
+	if email == "" {
+		return Auth{}, errors.New("email should not be nil")
+	}
+	if password == "" {
+		return Auth{}, errors.New("password should not be nil")
+	}
+	auth := &Auth{
+		Email:    Email(email),
+		Password: password,
+	}
+	return *auth, nil
+}

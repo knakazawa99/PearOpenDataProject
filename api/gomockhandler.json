@@ -10,6 +10,16 @@
 				"package": "repository"
 			}
 		},
+		"domain/repository/cache_mock.go": {
+			"checksum": "QKtvNrE4wC/QaEl8+SURZw==",
+			"source_checksum": "0B7S9zIcEF1HiOOhKSvzuQ==",
+			"mode": "SOURCE_MODE",
+			"source_mode_runner": {
+				"source": "domain/repository/cache.go",
+				"destination": "domain/repository/cache_mock.go",
+				"package": "repository"
+			}
+		},
 		"domain/repository/download_pear_mock.go": {
 			"checksum": "6FeLJgNzhZrj1YDaYJ5kWA==",
 			"source_checksum": "1eNP6uDcJ7+BFjCahOQPBg==",
@@ -32,7 +42,7 @@
 		},
 		"http/handler/auth_mock.go": {
 			"checksum": "J31HagovTUbhS7t0T3o0BA==",
-			"source_checksum": "/mqofUb1VcmKgAQrMWigjA==",
+			"source_checksum": "2pAMqpj6yxEm+DK+x3Dn/Q==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "http/handler/auth.go",
@@ -51,8 +61,8 @@
 			}
 		},
 		"usecase/auth_mock.go": {
-			"checksum": "38ktFyV4ZH/0SO4u2jyjeQ==",
-			"source_checksum": "4ZLeS05hEivcvP4/qieTbg==",
+			"checksum": "9yPtcHyQJsDn5YBnJLgTkA==",
+			"source_checksum": "gy8iR5X7Ftad6LZTjoT3bQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "usecase/auth.go",

@@ -34,6 +34,21 @@ func (m *MockAuth) EXPECT() *MockAuthMockRecorder {
 	return m.recorder
 }
 
+// AdminSignUp mocks base method.
+func (m *MockAuth) AdminSignUp(auth entity.Auth) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AdminSignUp", auth)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AdminSignUp indicates an expected call of AdminSignUp.
+func (mr *MockAuthMockRecorder) AdminSignUp(auth interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignUp", reflect.TypeOf((*MockAuth)(nil).AdminSignUp), auth)
+}
+
 // DownloadWithToken mocks base method.
 func (m *MockAuth) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
 	m.ctrl.T.Helper()

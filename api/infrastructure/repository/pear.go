@@ -19,10 +19,31 @@ func (p pear) FindPears(db *gorm.DB) ([]entity.Pear, error) {
 	pears := make([]entity.Pear, len(gormPears))
 	for i := range gormPears {
 		pears[i] = entity.Pear{
-			FilePath:    gormPears[i].FilePath,
-			Version:     gormPears[i].Version,
-			ReleaseNote: gormPears[i].ReleaseNote,
-			CreatedAt:   *gormPears[i].CreatedAt,
+			FilePath:       gormPears[i].FilePath,
+			Version:        gormPears[i].Version,
+			ReleaseNote:    gormPears[i].ReleaseNote,
+			ReleaseComment: gormPears[i].ReleaseComment,
+			ReleaseFlag:    gormPears[i].ReleaseFlag,
+			CreatedAt:      *gormPears[i].CreatedAt,
+		}
+	}
+	return pears, nil
+}
+
+func (p pear) FindReleasedPears(db *gorm.DB) ([]entity.Pear, error) {
+	var gormPears []gormmodel.GormPear
+	if err := db.Where("release_flag = ?", 1).Find(&gormPears).Error; err != nil {
+		return []entity.Pear{}, err
+	}
+	pears := make([]entity.Pear, len(gormPears))
+	for i := range gormPears {
+		pears[i] = entity.Pear{
+			FilePath:       gormPears[i].FilePath,
+			Version:        gormPears[i].Version,
+			ReleaseNote:    gormPears[i].ReleaseNote,
+			ReleaseComment: gormPears[i].ReleaseComment,
+			ReleaseFlag:    gormPears[i].ReleaseFlag,
+			CreatedAt:      *gormPears[i].CreatedAt,
 		}
 	}
 	return pears, nil

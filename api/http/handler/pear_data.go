@@ -11,6 +11,7 @@ import (
 
 type PearData interface {
 	GetPearVersions(ctx echo.Context) error
+	GetAdminPearVersions(ctx echo.Context) error
 }
 
 type pearData struct {
@@ -19,6 +20,16 @@ type pearData struct {
 
 func (p pearData) GetPearVersions(ctx echo.Context) error {
 	pearVersion, err := p.pearUseCase.GetDataVersions()
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
+	}
+	return ctx.JSON(http.StatusOK, pearVersion)
+}
+
+func (p pearData) GetAdminPearVersions(ctx echo.Context) error {
+	pearVersion, err := p.pearUseCase.GetAdminDataVersions()
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

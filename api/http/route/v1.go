@@ -55,5 +55,7 @@ func V1(handler Handler, e *echo.Echo) {
 	admin := v1.Group("/admin")
 	admin.POST("/signup", handler.Auth.AdminSignup)
 
+	admin.GET("/versions", handler.Pear.GetAdminPearVersions)
+
 	return
 }

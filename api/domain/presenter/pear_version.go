@@ -7,6 +7,7 @@ import (
 
 type PearVersion interface {
 	OutPutPearVersions([]entity.Pear) []response.PearDataVersionOutput
+	OutPutPearAdminVersions([]entity.Pear) []response.PearAdminDataVersionOutput
 }
 
 type pearVersionImplement struct {
@@ -19,6 +20,21 @@ func (p pearVersionImplement) OutPutPearVersions(pears []entity.Pear) []response
 			Version:     pears[i].Version,
 			ReleaseNote: pears[i].ReleaseNote,
 			CreatedAt:   pears[i].CreatedAt,
+		}
+	}
+	return pearDataVersionOutputs
+}
+
+func (p pearVersionImplement) OutPutPearAdminVersions(pears []entity.Pear) []response.PearAdminDataVersionOutput {
+	pearDataVersionOutputs := make([]response.PearAdminDataVersionOutput, len(pears))
+	for i := range pears {
+		pearDataVersionOutputs[i] = response.PearAdminDataVersionOutput{
+			FilePath:       pears[i].FilePath,
+			Version:        pears[i].Version,
+			ReleaseNote:    pears[i].ReleaseNote,
+			ReleaseComment: pears[i].ReleaseComment,
+			ReleaseFlag:    pears[i].ReleaseFlag,
+			CreatedAt:      pears[i].CreatedAt,
 		}
 	}
 	return pearDataVersionOutputs

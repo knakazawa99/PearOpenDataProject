@@ -29,6 +29,7 @@ func (p pearVersionImplement) OutPutPearAdminVersions(pears []entity.Pear) []res
 	pearDataVersionOutputs := make([]response.PearAdminDataVersionOutput, len(pears))
 	for i := range pears {
 		pearDataVersionOutputs[i] = response.PearAdminDataVersionOutput{
+			ID:             pears[i].ID,
 			FilePath:       pears[i].FilePath,
 			Version:        pears[i].Version,
 			ReleaseNote:    pears[i].ReleaseNote,

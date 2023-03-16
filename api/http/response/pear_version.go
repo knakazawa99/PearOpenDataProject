@@ -11,6 +11,7 @@ type PearDataVersionOutput struct {
 }
 
 type PearAdminDataVersionOutput struct {
+	ID             int       `json:"id"`
 	FilePath       string    `json:"file_path"`
 	Version        string    `json:"version"`
 	ReleaseNote    string    `json:"release_note"`

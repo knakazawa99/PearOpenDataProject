@@ -19,6 +19,7 @@ func (p pear) FindPears(db *gorm.DB) ([]entity.Pear, error) {
 	pears := make([]entity.Pear, len(gormPears))
 	for i := range gormPears {
 		pears[i] = entity.Pear{
+			ID:             gormPears[i].ID,
 			FilePath:       gormPears[i].FilePath,
 			Version:        gormPears[i].Version,
 			ReleaseNote:    gormPears[i].ReleaseNote,
@@ -38,6 +39,7 @@ func (p pear) FindReleasedPears(db *gorm.DB) ([]entity.Pear, error) {
 	pears := make([]entity.Pear, len(gormPears))
 	for i := range gormPears {
 		pears[i] = entity.Pear{
+			ID:             gormPears[i].ID,
 			FilePath:       gormPears[i].FilePath,
 			Version:        gormPears[i].Version,
 			ReleaseNote:    gormPears[i].ReleaseNote,

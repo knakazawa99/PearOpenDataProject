@@ -34,6 +34,21 @@ func (m *MockPear) EXPECT() *MockPearMockRecorder {
 	return m.recorder
 }
 
+// GetAdminDataVersions mocks base method.
+func (m *MockPear) GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAdminDataVersions")
+	ret0, _ := ret[0].([]response.PearAdminDataVersionOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAdminDataVersions indicates an expected call of GetAdminDataVersions.
+func (mr *MockPearMockRecorder) GetAdminDataVersions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdminDataVersions", reflect.TypeOf((*MockPear)(nil).GetAdminDataVersions))
+}
+
 // GetDataVersions mocks base method.
 func (m *MockPear) GetDataVersions() ([]response.PearDataVersionOutput, error) {
 	m.ctrl.T.Helper()

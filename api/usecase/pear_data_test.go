@@ -26,3 +26,16 @@ func TestPearDataInteractor_GetDataVersions(t *testing.T) {
 	assert.IsType(t, []response.PearDataVersionOutput{}, pears)
 	assert.Nil(t, err)
 }
+
+func TestPearDataInteractor_UpdateAdminData(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockPearRepository := repository.NewMockPear(ctrl)
+
+	mockPearRepository.EXPECT().Update(gomock.Any(), gomock.Any()).Return(nil)
+	pearVersionPresenter := presenter.NewPearVersion()
+	pearDataInteractor := NewPearData(mockPearRepository, pearVersionPresenter)
+
+	pearEntity := entity.Pear{}
+	err := pearDataInteractor.UpdateAdminData(pearEntity)
+	assert.Nil(t, err)
+}

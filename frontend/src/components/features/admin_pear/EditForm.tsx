@@ -13,7 +13,7 @@ import * as React from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
-import { AdminVersion } from 'components/features/admin_pear/Type';
+import { AdminVersion, AdminVersionFormValues } from 'components/features/admin_pear/Type';
 import { BASE_URL } from 'config/config';
 import { AlertColor } from '@mui/material/Alert/Alert';
 
@@ -24,7 +24,7 @@ const EditFormDialog = (prop: {adminVersion: AdminVersion, updateFunc: (adminVer
   const [alertMessageSeverity, setAlertMessageSeverity] = useState<AlertColor>("success")
   const [open, setOpen] = useState(false)
 
-  const { register, handleSubmit } = useForm<AdminVersion>({})
+  const { register, handleSubmit } = useForm<AdminVersionFormValues>({})
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,7 +96,7 @@ const EditFormDialog = (prop: {adminVersion: AdminVersion, updateFunc: (adminVer
               fullWidth
               variant="standard"
               defaultValue={prop.adminVersion.releaseNote}
-              {...register("releaseNote")}
+              {...register("release_note")}
             />
             <TextField
               autoFocus
@@ -105,9 +105,9 @@ const EditFormDialog = (prop: {adminVersion: AdminVersion, updateFunc: (adminVer
               fullWidth
               variant="standard"
               defaultValue={prop.adminVersion.releaseComment}
-              {...register("releaseComment")}
+              {...register("release_comment")}
             />
-            <FormControlLabel control={<Checkbox defaultChecked={prop.adminVersion.releaseFlag} />} label="リリースフラグ" {...register("releaseFlag")} />
+            <FormControlLabel control={<Checkbox defaultChecked={prop.adminVersion.releaseFlag} />} label="リリースフラグ" {...register("release_flag")} />
             <LoadingButton
               loading={isLoading}
               type="submit"
@@ -117,7 +117,6 @@ const EditFormDialog = (prop: {adminVersion: AdminVersion, updateFunc: (adminVer
             >
               更新
             </LoadingButton>
-
 
             {
               isAlertMessage ? <Alert variant="outlined" onClose={() => {setIsAlertMessage(false)}} severity={alertMessageSeverity}>{alertMessage}</Alert>

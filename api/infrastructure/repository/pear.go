@@ -58,7 +58,7 @@ func (p pear) Update(db *gorm.DB, pear entity.Pear) error {
 		ReleaseNote:    pear.ReleaseNote,
 		ReleaseFlag:    pear.ReleaseFlag,
 	}
-	if err := db.Model(&gormPear).Where("id = ?", pear.ID).
+	if err := db.Debug().Model(&gormPear).Where("id = ?", pear.ID).
 		Updates(map[string]interface{}{"release_comment": pear.ReleaseComment, "release_note": pear.ReleaseNote, "release_flag": pear.ReleaseFlag}).
 		Error; err != nil {
 		return err

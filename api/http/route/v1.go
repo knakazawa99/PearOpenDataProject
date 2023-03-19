@@ -56,6 +56,7 @@ func V1(handler Handler, e *echo.Echo) {
 	admin.POST("/signup", handler.Auth.AdminSignup)
 
 	admin.GET("/versions", handler.Pear.GetAdminPearVersions)
+	admin.PUT("/versions/:id", handler.Pear.UpdateAdminPear)
 
 	return
 }

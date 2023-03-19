@@ -49,3 +49,32 @@ func (mr *MockPearMockRecorder) FindPears(db interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindPears", reflect.TypeOf((*MockPear)(nil).FindPears), db)
 }
+
+// FindReleasedPears mocks base method.
+func (m *MockPear) FindReleasedPears(db *gorm.DB) ([]entity.Pear, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindReleasedPears", db)
+	ret0, _ := ret[0].([]entity.Pear)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindReleasedPears indicates an expected call of FindReleasedPears.
+func (mr *MockPearMockRecorder) FindReleasedPears(db interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindReleasedPears", reflect.TypeOf((*MockPear)(nil).FindReleasedPears), db)
+}
+
+// Update mocks base method.
+func (m *MockPear) Update(db *gorm.DB, pear entity.Pear) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", db, pear)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockPearMockRecorder) Update(db, pear interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockPear)(nil).Update), db, pear)
+}

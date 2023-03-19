@@ -51,6 +51,21 @@ func (p pear) FindReleasedPears(db *gorm.DB) ([]entity.Pear, error) {
 	return pears, nil
 }
 
+func (p pear) Update(db *gorm.DB, pear entity.Pear) error {
+	gormPear := gormmodel.GormPear{
+		ID:             pear.ID,
+		ReleaseComment: pear.ReleaseComment,
+		ReleaseNote:    pear.ReleaseNote,
+		ReleaseFlag:    pear.ReleaseFlag,
+	}
+	if err := db.Model(&gormPear).Where("id = ?", pear.ID).
+		Updates(map[string]interface{}{"release_comment": pear.ReleaseComment, "release_note": pear.ReleaseNote, "release_flag": pear.ReleaseFlag}).
+		Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewPear() repository.Pear {
 	return &pear{}
 }

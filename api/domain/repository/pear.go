@@ -9,4 +9,5 @@ import (
 type Pear interface {
 	FindPears(db *gorm.DB) ([]entity.Pear, error)
 	FindReleasedPears(db *gorm.DB) ([]entity.Pear, error)
+	Update(db *gorm.DB, pear entity.Pear) error
 }

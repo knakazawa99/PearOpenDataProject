@@ -6,6 +6,7 @@ package repository
 
 import (
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 )
@@ -49,7 +50,7 @@ func (mr *MockCacheMockRecorder) Get(key interface{}) *gomock.Call {
 }
 
 // Set mocks base method.
-func (m *MockCache) Set(key, value string, ttl int) error {
+func (m *MockCache) Set(key, value string, ttl time.Duration) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Set", key, value, ttl)
 	ret0, _ := ret[0].(error)

@@ -6,11 +6,15 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	"api/domain/entity"
+	"api/http/request"
 	"api/usecase"
 )
 
 type PearData interface {
 	GetPearVersions(ctx echo.Context) error
+	GetAdminPearVersions(ctx echo.Context) error
+	UpdateAdminPear(ctx echo.Context) error
 }
 
 type pearData struct {
@@ -25,6 +29,44 @@ func (p pearData) GetPearVersions(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
 	}
 	return ctx.JSON(http.StatusOK, pearVersion)
+}
+
+func (p pearData) GetAdminPearVersions(ctx echo.Context) error {
+	pearVersion, err := p.pearUseCase.GetAdminDataVersions()
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
+	}
+	return ctx.JSON(http.StatusOK, pearVersion)
+}
+
+func (p pearData) UpdateAdminPear(ctx echo.Context) error {
+	req := &request.PearUpdate{}
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
+	if err := ctx.Bind(req); err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
+	}
+	pearEntity := entity.Pear{
+		ID:             req.ID,
+		ReleaseNote:    req.ReleaseNote,
+		ReleaseComment: req.ReleaseComment,
+		ReleaseFlag:    req.ReleaseFlag,
+	}
+
+	authorizationEntity := entity.Authorization{
+		JWTKey:   jwtKey,
+		JWTToken: jwtToken,
+	}
+	if err := p.pearUseCase.UpdateAdminData(pearEntity, authorizationEntity); err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
+	}
+	return ctx.JSON(http.StatusNoContent, "")
 }
 
 func NewPearData(pearUseCase usecase.Pear) PearData {

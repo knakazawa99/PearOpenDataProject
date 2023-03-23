@@ -2,8 +2,9 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from 'config/config';
 import axios from 'axios';
-import EditFormDialog from './EditForm';
+import EditFormDialog from 'components/features/admin_pear/EditForm';
 import { AdminVersion } from 'components/features/admin_pear/Type';
+import router from 'Rotuer';
 
 type APIAdminVersionInformation = {
   id: number
@@ -20,6 +21,12 @@ const AdminPear = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const jwtKey = localStorage.getItem("jwtKey")
+      const jwtToken = localStorage.getItem("jwtToken")
+      if (jwtKey == "" || jwtToken == "") {
+        await router.navigate("/admin/signin")
+      }
+
       const path = BASE_URL + "/v1/admin/versions";
       await axios.get(path).then((response) => {
         const adminVersionInformation = response.data?.map((info: APIAdminVersionInformation) => {

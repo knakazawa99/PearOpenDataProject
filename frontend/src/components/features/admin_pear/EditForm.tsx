@@ -43,7 +43,13 @@ const EditFormDialog = (prop: {adminVersion: AdminVersion, updateFunc: (adminVer
     const path = BASE_URL + "/v1/admin/versions/" + prop.adminVersion.id
     await axios.put(
       path,
-      submitData
+      submitData,
+      {
+        headers: {
+          'authorization': `Bearer ${localStorage.getItem("jwtToken")}`,
+          'x-jwtKey': `${localStorage.getItem("jwtKey")}`,
+        }
+      }
     ).then((res) => {
 
       prop.updateFunc({

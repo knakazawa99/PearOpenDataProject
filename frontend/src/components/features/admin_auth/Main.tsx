@@ -48,6 +48,7 @@ const AdminAuth = () => {
     event?.preventDefault();
 
     if (!formValidation()) {
+      setIsLoading(false)
       unblocking();
       return
 
@@ -59,6 +60,7 @@ const AdminAuth = () => {
       submitData
     ).then((res) => {
       localStorage.setItem("jwtToken", res.data.token)
+      localStorage.setItem("jwtKey", submitData.email)
       unblocking();
       setIsLoading(false)
       router.navigate("/admin/versions")

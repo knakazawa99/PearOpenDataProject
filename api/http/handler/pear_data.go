@@ -43,6 +43,8 @@ func (p pearData) GetAdminPearVersions(ctx echo.Context) error {
 
 func (p pearData) UpdateAdminPear(ctx echo.Context) error {
 	req := &request.PearUpdate{}
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
 	if err := ctx.Bind(req); err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -54,7 +56,12 @@ func (p pearData) UpdateAdminPear(ctx echo.Context) error {
 		ReleaseComment: req.ReleaseComment,
 		ReleaseFlag:    req.ReleaseFlag,
 	}
-	if err := p.pearUseCase.UpdateAdminData(pearEntity); err != nil {
+
+	authorizationEntity := entity.Authorization{
+		JWTKey:   jwtKey,
+		JWTToken: jwtToken,
+	}
+	if err := p.pearUseCase.UpdateAdminData(pearEntity, authorizationEntity); err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)

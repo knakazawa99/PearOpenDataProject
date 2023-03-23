@@ -7,6 +7,7 @@ import (
 
 	"api/domain/presenter"
 	"api/http/handler"
+	"api/http/middleware"
 	"api/infrastructure/notify"
 	"api/infrastructure/repository"
 	"api/usecase"
@@ -16,6 +17,10 @@ type Handler struct {
 	Example handler.Example
 	Auth    handler.Auth
 	Pear    handler.PearData
+}
+
+type Middleware struct {
+	Auth middleware.Auth
 }
 
 func NewHandler(ctx context.Context) (Handler, error) {
@@ -29,7 +34,7 @@ func NewHandler(ctx context.Context) (Handler, error) {
 	pearVersionPresenter := presenter.NewPearVersion()
 
 	authUseCase := usecase.NewAuth(authRepository, downloadPearRepository, cacheRepository, emailSender)
-	pearUseCase := usecase.NewPearData(pearRepository, pearVersionPresenter)
+	pearUseCase := usecase.NewPearData(pearRepository, cacheRepository, pearVersionPresenter)
 	return Handler{
 		Example: handler.NewExample(),
 		Auth:    handler.NewAuth(authUseCase),
@@ -37,7 +42,13 @@ func NewHandler(ctx context.Context) (Handler, error) {
 	}, nil
 }
 
-func V1(handler Handler, e *echo.Echo) {
+func NewMiddleware() (Middleware, error) {
+	return Middleware{
+		Auth: middleware.NewAuth(),
+	}, nil
+}
+
+func V1(handler Handler, m Middleware, e *echo.Echo) {
 
 	v1 := e.Group("/v1")
 
@@ -56,7 +67,7 @@ func V1(handler Handler, e *echo.Echo) {
 	admin.POST("/signup", handler.Auth.AdminSignup)
 
 	admin.GET("/versions", handler.Pear.GetAdminPearVersions)
-	admin.PUT("/versions/:id", handler.Pear.UpdateAdminPear)
+	admin.PUT("/versions/:id", handler.Pear.UpdateAdminPear, m.Auth.Auth)
 
 	return
 }

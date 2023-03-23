@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"api/domain/entity"
 	"api/domain/presenter"
 	"api/domain/repository"
@@ -11,11 +13,12 @@ import (
 type Pear interface {
 	GetDataVersions() ([]response.PearDataVersionOutput, error)
 	GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error)
-	UpdateAdminData(pearEntity entity.Pear) error
+	UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error
 }
 
 type pearDataInteractor struct {
 	pearRepository       repository.Pear
+	cacheRepository      repository.Cache
 	pearVersionPresenter presenter.PearVersion
 }
 
@@ -41,10 +44,18 @@ func (p pearDataInteractor) GetAdminDataVersions() ([]response.PearAdminDataVers
 	return p.pearVersionPresenter.OutPutPearAdminVersions(pears), nil
 }
 
-func (p pearDataInteractor) UpdateAdminData(pearEntity entity.Pear) error {
+func (p pearDataInteractor) UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
 	db, _ := utils.ConnectDB()
 	dbForClose, _ := db.DB()
 	defer dbForClose.Close()
+
+	jwtToken, err := p.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return errors.New("incorrect jwt token")
+	}
 
 	if err := p.pearRepository.Update(db, pearEntity); err != nil {
 		return err
@@ -52,9 +63,10 @@ func (p pearDataInteractor) UpdateAdminData(pearEntity entity.Pear) error {
 	return nil
 }
 
-func NewPearData(pearRepository repository.Pear, pearVersionPresenter presenter.PearVersion) Pear {
+func NewPearData(pearRepository repository.Pear, cacheRepository repository.Cache, pearVersionPresenter presenter.PearVersion) Pear {
 	return pearDataInteractor{
 		pearRepository:       pearRepository,
+		cacheRepository:      cacheRepository,
 		pearVersionPresenter: pearVersionPresenter,
 	}
 }

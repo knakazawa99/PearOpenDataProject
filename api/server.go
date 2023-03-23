@@ -15,7 +15,7 @@ func main() {
 	e.Use(middleware.CORS())
 
 	handler, _ := route.NewHandler(ctx)
-
-	route.V1(handler, e)
+	middleware, _ := route.NewMiddleware()
+	route.V1(handler, middleware, e)
 	e.Logger.Fatal(e.Start(":80"))
 }

@@ -5,6 +5,7 @@
 package usecase
 
 import (
+	entity "api/domain/entity"
 	response "api/http/response"
 	reflect "reflect"
 
@@ -62,4 +63,18 @@ func (m *MockPear) GetDataVersions() ([]response.PearDataVersionOutput, error) {
 func (mr *MockPearMockRecorder) GetDataVersions() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataVersions", reflect.TypeOf((*MockPear)(nil).GetDataVersions))
+}
+
+// UpdateAdminData mocks base method.
+func (m *MockPear) UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAdminData", pearEntity, authorizationEntity)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAdminData indicates an expected call of UpdateAdminData.
+func (mr *MockPearMockRecorder) UpdateAdminData(pearEntity, authorizationEntity interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminData", reflect.TypeOf((*MockPear)(nil).UpdateAdminData), pearEntity, authorizationEntity)
 }

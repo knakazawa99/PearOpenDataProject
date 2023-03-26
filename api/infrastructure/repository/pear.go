@@ -66,6 +66,34 @@ func (p pear) Update(db *gorm.DB, pear entity.Pear) error {
 	return nil
 }
 
+func (p pear) Create(db *gorm.DB, pear entity.Pear) (entity.Pear, error) {
+	gormPear := gormmodel.GormPear{
+		ReleaseComment: pear.ReleaseComment,
+		ReleaseNote:    pear.ReleaseNote,
+		ReleaseFlag:    pear.ReleaseFlag,
+		Version:        pear.Version,
+		FilePath:       pear.FilePath,
+	}
+	if err := db.Create(&gormPear).Error; err != nil {
+		return entity.Pear{}, err
+	}
+	var createdGormPear gormmodel.GormPear
+
+	if err := db.First(&createdGormPear, gormPear.ID).Error; err != nil {
+		return entity.Pear{}, err
+	}
+
+	return entity.Pear{
+		ID:             createdGormPear.ID,
+		ReleaseNote:    createdGormPear.ReleaseNote,
+		ReleaseComment: createdGormPear.ReleaseComment,
+		Version:        createdGormPear.Version,
+		FilePath:       createdGormPear.FilePath,
+		CreatedAt:      *createdGormPear.CreatedAt,
+	}, nil
+
+}
+
 func NewPear() repository.Pear {
 	return &pear{}
 }

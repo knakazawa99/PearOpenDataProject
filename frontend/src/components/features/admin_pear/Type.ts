@@ -9,6 +9,7 @@ export type AdminVersion = {
 }
 
 export type AdminVersionFormValues = {
+  files: []
   id: number
   version: string
   file_path: string

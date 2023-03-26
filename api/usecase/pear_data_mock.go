@@ -35,6 +35,21 @@ func (m *MockPear) EXPECT() *MockPearMockRecorder {
 	return m.recorder
 }
 
+// CreateData mocks base method.
+func (m *MockPear) CreateData(pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateData", pearEntity, authorizationEntity)
+	ret0, _ := ret[0].(entity.Pear)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateData indicates an expected call of CreateData.
+func (mr *MockPearMockRecorder) CreateData(pearEntity, authorizationEntity interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateData", reflect.TypeOf((*MockPear)(nil).CreateData), pearEntity, authorizationEntity)
+}
+
 // GetAdminDataVersions mocks base method.
 func (m *MockPear) GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error) {
 	m.ctrl.T.Helper()

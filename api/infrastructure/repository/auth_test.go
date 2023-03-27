@@ -23,7 +23,7 @@ func TestAuth_SaveAuthUser(t *testing.T) {
 	authRepository := NewAuth()
 	authEntity := entity.Auth{
 		Email: entity.Email("test@gmail.com"),
-		Type:  types.TypeAdmin,
+		Type:  types.TypeUser,
 		Token: "test",
 	}
 	err := authRepository.SaveAuth(db, authEntity)
@@ -35,6 +35,32 @@ func TestAuth_SaveAuthUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, string(authEntity.Email), resultGormAuthInformation.Email)
 	assert.Equal(t, authEntity.Token, resultGormToken.Token)
+}
+
+func TestAuth_SaveAuthAdmin(t *testing.T) {
+	db := testutil.DB()
+	defer testutil.CloseDB(db)
+
+	testutil.TruncateTables(db, []interface{}{
+		&gormmodel.GormAuthInformation{},
+		&gormmodel.GormAdminInformation{},
+	})
+
+	authRepository := NewAuth()
+	authEntity := entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Type:     types.TypeAdmin,
+		Password: "hogehoge",
+	}
+	err := authRepository.SaveAuth(db, authEntity)
+	var resultGormAuthInformation gormmodel.GormAuthInformation
+	var resultGormAdminInformation gormmodel.GormAdminInformation
+	db.Where("id = ?", 1).Take(&resultGormAuthInformation)
+	db.Where("auth_information_id = ?", 1).Take(&resultGormAdminInformation)
+
+	assert.Nil(t, err)
+	assert.Equal(t, string(authEntity.Email), resultGormAuthInformation.Email)
+	assert.Equal(t, authEntity.Password, resultGormAdminInformation.Password)
 }
 
 func TestAuth_FindByEmail(t *testing.T) {

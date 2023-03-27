@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"gorm.io/gorm"
 
 	"api/domain/entity"
@@ -18,7 +20,7 @@ func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
 		if err.Error() == gorm.ErrRecordNotFound.Error() {
 			gormAuthInformation = gormmodel.GormAuthInformation{
 				Email:    string(auth.Email),
-				AuthType: string(types.TypeUser),
+				AuthType: string(auth.Type),
 			}
 			if err := db.Create(&gormAuthInformation).Error; err != nil {
 				return err
@@ -41,7 +43,7 @@ func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
 				gormAuthUser.AuthInformationID = gormAuthInformation.ID
 				gormAuthUser.Organization = auth.User.Organization
 				gormAuthUser.Name = auth.User.Name
-				if err := db.Debug().Create(&gormAuthUser).Error; err != nil {
+				if err := db.Create(&gormAuthUser).Error; err != nil {
 					return err
 				}
 			} else {
@@ -53,15 +55,26 @@ func (a auth) SaveAuth(db *gorm.DB, auth entity.Auth) error {
 				return err
 			}
 		}
-	} else if auth.Type == types.TypeAdmin {
-		gormAdminInformation := gormmodel.GormAdminInformation{
-			AuthInformationID: gormAuthInformation.ID,
-			Password:          auth.Password,
-		}
-		if err := db.Save(&gormAdminInformation).Error; err != nil {
-			return err
+	} else if gormAuthInformation.AuthType == string(types.TypeAdmin) {
+		var gormAdminInformation gormmodel.GormAdminInformation
+		if err := db.Where("auth_information_id = ?", gormAuthInformation.ID).Take(&gormAdminInformation).Error; err != nil {
+			if err.Error() == gorm.ErrRecordNotFound.Error() {
+				gormAdminInformation.Password = auth.Password
+				gormAdminInformation.AuthInformationID = gormAuthInformation.ID
+				if err := db.Create(&gormAdminInformation).Error; err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		} else {
+			gormAdminInformation.Password = auth.Password
+			if err := db.Save(&gormAdminInformation).Error; err != nil {
+				return err
+			}
 		}
 	} else {
+		return errors.New("auth type should be admin or user")
 	}
 	return nil
 }

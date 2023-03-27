@@ -8,7 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import React, { useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useBlockDoubleClick } from 'common/useBlockDoubleClick';
@@ -18,7 +18,7 @@ import { BASE_URL } from 'config/config';
 
 
 const Upload = () => {
-  const [file, setFile] = useState<string>()
+  const [fileName, setFileName] = useState<string>()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isAlertMessage, setIsAlertMessage] = useState<boolean>(false)
@@ -37,7 +37,7 @@ const Upload = () => {
   const [fileError, setFileError] = useState(false);
   const [fileErrorMessage, setFileErrorMessage] = useState<string>()
 
-  const { register, handleSubmit } = useForm<AdminVersionFormValues>({})
+  const { register, handleSubmit, setValue, watch } = useForm<AdminVersionFormValues>({})
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,7 +55,7 @@ const Upload = () => {
     valid = formValidation()
 
     if (submitData.files.length == 0) {
-      setFileError(true)
+      setFileError(false)
       setFileErrorMessage("ファイルは必須項目です。")
     }
 
@@ -101,6 +101,13 @@ const Upload = () => {
   const [onSubmit, processing, unblocking] = useBlockDoubleClick(
     onSubmitInner,
   )
+
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
+    setValue("files", e.target.files)
+    setFileName(e.target?.files?.[0].name)
+  }
+
 
   const formValidation = (): boolean => {
     let valid = true;
@@ -187,16 +194,11 @@ const Upload = () => {
                   type="file"
                   hidden
                   accept=".zip"
-                  {...register("files")}
-                  onChange={(e) => {
-                    if (e.target?.files?.[0]) {
-                      setFile(e.target.files[0].name)
-                    }
-                  }}
+                  onChange={onFileChange}
                 />
               </Button>
               <Typography variant="subtitle1" align="left" color="text.secondary">
-                {file}
+                {fileName}
               </Typography>
               <FormHelperText>
                 {fileError ? fileErrorMessage: ""}

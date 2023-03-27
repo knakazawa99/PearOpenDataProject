@@ -1,1 +1,1 @@
-export const VersionValidPattern = "/^(\\d+\\.)+\\d+$/"
+export const VersionValidPattern = "^(\\d+\\.)+\\d+$";

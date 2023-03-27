@@ -74,8 +74,6 @@ func (p pearData) UpdateAdminPear(ctx echo.Context) error {
 
 func (p pearData) UploadPear(ctx echo.Context) error {
 	req := &request.PearCreate{}
-	jwtToken := ctx.Get("jwtToken").(string)
-	jwtKey := ctx.Get("jwtKey").(string)
 	if err := ctx.Bind(req); err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -89,6 +87,8 @@ func (p pearData) UploadPear(ctx echo.Context) error {
 		FilePath:       "/var/pear/data/" + req.Version + ".zip",
 	}
 
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
 	authorizationEntity := entity.Authorization{
 		JWTKey:   jwtKey,
 		JWTToken: jwtToken,
@@ -103,24 +103,32 @@ func (p pearData) UploadPear(ctx echo.Context) error {
 
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		return err
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
 	}
 
 	src, err := file.Open()
 	if err != nil {
-		return err
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
 	}
 	defer src.Close()
 
 	dst, err := os.Create(pearEntity.FilePath)
 	if err != nil {
-		return err
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
 	}
 	defer dst.Close()
 
 	// Copy file contents to destination file
 	if _, err = io.Copy(dst, src); err != nil {
-		return err
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
 	}
 
 	return ctx.JSON(http.StatusOK, createdPearEntity)

@@ -69,7 +69,6 @@ func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear)
 		return entity.DownloadPear{}, err
 	}
 	return downloadPear, nil
-
 }
 
 func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {

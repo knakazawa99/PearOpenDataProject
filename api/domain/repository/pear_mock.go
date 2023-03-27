@@ -35,6 +35,21 @@ func (m *MockPear) EXPECT() *MockPearMockRecorder {
 	return m.recorder
 }
 
+// Create mocks base method.
+func (m *MockPear) Create(db *gorm.DB, pear entity.Pear) (entity.Pear, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", db, pear)
+	ret0, _ := ret[0].(entity.Pear)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockPearMockRecorder) Create(db, pear interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockPear)(nil).Create), db, pear)
+}
+
 // FindPears mocks base method.
 func (m *MockPear) FindPears(db *gorm.DB) ([]entity.Pear, error) {
 	m.ctrl.T.Helper()

@@ -99,3 +99,26 @@ func TestPear_Update(t *testing.T) {
 	assert.Equal(t, updatePearData.ReleaseNote, afterPearData.ReleaseNote)
 	assert.Equal(t, updatePearData.ReleaseFlag, afterPearData.ReleaseFlag)
 }
+
+func TestPear_Create(t *testing.T) {
+	db := testutil.DB()
+	defer testutil.CloseDB(db)
+	testutil.TruncateTables(db, []interface{}{
+		&gormmodel.GormPear{},
+	})
+
+	pearRepository := NewPear()
+
+	createPearEntity := entity.Pear{
+		ID:             1,
+		Version:        "1.0.0",
+		FilePath:       "test.zip",
+		ReleaseComment: "updated_comment",
+		ReleaseNote:    "updated_note",
+		ReleaseFlag:    false,
+	}
+	createdPearEntity, err := pearRepository.Create(db, createPearEntity)
+	assert.Nil(t, err)
+
+	assert.Equal(t, createdPearEntity.Version, createPearEntity.Version)
+}

@@ -19,6 +19,7 @@ type Auth interface {
 	AdminSignUp(auth entity.Auth) (string, error)
 	SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error)
 	GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error)
+	DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error
 }
 
 type authInteractor struct {
@@ -142,6 +143,27 @@ func (a authInteractor) GetAdmin(authorizationEntity entity.Authorization) ([]en
 		return []entity.Auth{}, err
 	}
 	return authEntities, nil
+}
+
+func (a authInteractor) DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+
+	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return errors.New("incorrect jwt token")
+	}
+
+	auth.Type = types.TypeAdmin
+	if err := a.authRepository.Delete(db, auth); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, cacheRepository repository.Cache, emailSender notify.EmailSender) Auth {

@@ -178,5 +178,30 @@ func TestAuthInteractor_GetAdmin(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
+}
 
+func TestAuthInteractor_DeleteAdmin(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockAuthRepository := repository.NewMockAuth(ctrl)
+	mockDownloadPearRepository := repository.NewMockDownloadPear(ctrl)
+	mockCacheRepository := repository.NewMockCache(ctrl)
+	mockEmailSender := notify.NewMockEmailSender(ctrl)
+
+	mockAuthRepository.EXPECT().Delete(gomock.Any(), gomock.Any()).Return(nil)
+	mockCacheRepository.EXPECT().Get(gomock.Any()).Return("token", nil)
+	authInteractor := NewAuth(mockAuthRepository, mockDownloadPearRepository, mockCacheRepository, mockEmailSender)
+
+	authEntity := entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+	authorizationEntity := entity.Authorization{
+		JWTKey:   "key",
+		JWTToken: "token",
+	}
+
+	err := authInteractor.DeleteAdmin(authEntity, authorizationEntity)
+	assert.Nil(t, err)
 }

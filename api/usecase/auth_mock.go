@@ -49,6 +49,20 @@ func (mr *MockAuthMockRecorder) AdminSignUp(auth interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignUp", reflect.TypeOf((*MockAuth)(nil).AdminSignUp), auth)
 }
 
+// DeleteAdmin mocks base method.
+func (m *MockAuth) DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAdmin", auth, authorizationEntity)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAdmin indicates an expected call of DeleteAdmin.
+func (mr *MockAuthMockRecorder) DeleteAdmin(auth, authorizationEntity interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAdmin", reflect.TypeOf((*MockAuth)(nil).DeleteAdmin), auth, authorizationEntity)
+}
+
 // DownloadWithToken mocks base method.
 func (m *MockAuth) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
 	m.ctrl.T.Helper()

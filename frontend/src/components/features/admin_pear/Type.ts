@@ -18,3 +18,9 @@ export type AdminVersionFormValues = {
   release_flag: boolean
   created_at: Date
 }
+
+export type AdminAuth = {
+  id: number
+  email: string
+  createdAt: Date
+}

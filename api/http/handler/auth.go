@@ -97,7 +97,7 @@ func (a auth) AdminSignup(ctx echo.Context) error {
 }
 
 func (a auth) RegisterAdmin(ctx echo.Context) error {
-	req := request.AdminAuth{}
+	req := &request.AdminAuth{}
 	if err := ctx.Bind(req); err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

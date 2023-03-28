@@ -9,14 +9,15 @@ import (
 )
 
 type Auth struct {
-	ID        int
-	Email     Email
-	Token     string
-	Type      types.AuthType
-	User      AuthUser
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	// FIXME: json の情報をresponseに移す
+	ID        int            `json:"id"`
+	Email     Email          `json:"email"`
+	Token     string         `json:"token"`
+	Type      types.AuthType `json:"type"`
+	User      AuthUser       `json:"user"`
+	Password  string         `json:"password"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 func NewAuth(organization string, name string, email string) (Auth, error) {

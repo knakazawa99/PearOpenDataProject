@@ -9,6 +9,7 @@ import (
 	"api/domain/entity/types"
 	"api/infrastructure/gormmodel"
 	"api/testutil"
+	"api/utils"
 )
 
 func TestAuth_SaveAuthUser(t *testing.T) {
@@ -48,10 +49,11 @@ func TestAuth_SaveAuthAdmin(t *testing.T) {
 
 	authRepository := NewAuth()
 	authEntity := entity.Auth{
-		Email:    entity.Email("test@gmail.com"),
+		Email:    entity.Email("noir.alpca@gmail.com"),
 		Type:     types.TypeAdmin,
 		Password: "hogehoge",
 	}
+	authEntity.Password, _ = utils.PasswordEncrypt(authEntity.Password)
 	err := authRepository.SaveAuth(db, authEntity)
 	var resultGormAuthInformation gormmodel.GormAuthInformation
 	var resultGormAdminInformation gormmodel.GormAdminInformation

@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"api/domain/entity"
+	"api/domain/entity/types"
 	"api/domain/repository"
 	"api/infrastructure/notify"
 	"api/utils"
@@ -17,6 +18,7 @@ type Auth interface {
 	DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
 	AdminSignUp(auth entity.Auth) (string, error)
 	SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error)
+	GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error)
 }
 
 type authInteractor struct {
@@ -120,6 +122,26 @@ func (a authInteractor) SaveAdmin(auth entity.Auth, authorizationEntity entity.A
 	}
 
 	return resultAuth, nil
+}
+
+func (a authInteractor) GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error) {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+
+	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return []entity.Auth{}, err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return []entity.Auth{}, errors.New("incorrect jwt token")
+	}
+
+	authEntities, err := a.authRepository.FindByType(db, types.TypeAdmin)
+	if err != nil {
+		return []entity.Auth{}, err
+	}
+	return authEntities, nil
 }
 
 func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, cacheRepository repository.Cache, emailSender notify.EmailSender) Auth {

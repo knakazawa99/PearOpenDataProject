@@ -19,6 +19,7 @@ type Auth interface {
 	DownloadWithToken(ctx echo.Context) error
 	AdminSignup(ctx echo.Context) error
 	RegisterAdmin(ctx echo.Context) error
+	GetAdmin(ctx echo.Context) error
 }
 
 type auth struct {
@@ -123,7 +124,24 @@ func (a auth) RegisterAdmin(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusCreated, auth)
+}
 
+func (a auth) GetAdmin(ctx echo.Context) error {
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
+	authorizationEntity := entity.Authorization{
+		JWTKey:   jwtKey,
+		JWTToken: jwtToken,
+	}
+
+	authEntities, err := a.authUseCase.GetAdmin(authorizationEntity)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
+	}
+
+	return ctx.JSON(http.StatusOK, authEntities)
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

@@ -62,6 +62,20 @@ func (mr *MockAuthMockRecorder) DownloadWithToken(ctx interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadWithToken", reflect.TypeOf((*MockAuth)(nil).DownloadWithToken), ctx)
 }
 
+// GetAdmin mocks base method.
+func (m *MockAuth) GetAdmin(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAdmin", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetAdmin indicates an expected call of GetAdmin.
+func (mr *MockAuthMockRecorder) GetAdmin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdmin", reflect.TypeOf((*MockAuth)(nil).GetAdmin), ctx)
+}
+
 // RegisterAdmin mocks base method.
 func (m *MockAuth) RegisterAdmin(ctx echo.Context) error {
 	m.ctrl.T.Helper()

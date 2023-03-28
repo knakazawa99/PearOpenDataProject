@@ -121,6 +121,10 @@ func (a authInteractor) SaveAdmin(auth entity.Auth, authorizationEntity entity.A
 	if err != nil {
 		return entity.Auth{}, err
 	}
+	messageContent := "管理者のアカウントを追加しました。\n\nパスワードは管理者に聞いてください。"
+	if err = a.emailSender.Send(notify.EmailDTO{Email: string(auth.Email), MessageContent: messageContent}); err != nil {
+		return entity.Auth{}, err
+	}
 
 	return resultAuth, nil
 }

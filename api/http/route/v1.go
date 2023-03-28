@@ -64,6 +64,7 @@ func V1(handler Handler, m Middleware, e *echo.Echo) {
 	pear.GET("/", handler.Pear.GetPearVersions)
 
 	admin := v1.Group("/admin")
+	admin.POST("/", handler.Auth.RegisterAdmin, m.Auth.Auth)
 	admin.POST("/signup", handler.Auth.AdminSignup)
 
 	admin.GET("/versions", handler.Pear.GetAdminPearVersions)

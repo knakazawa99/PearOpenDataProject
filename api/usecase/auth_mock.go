@@ -77,3 +77,18 @@ func (mr *MockAuthMockRecorder) RequestEmail(auth interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestEmail", reflect.TypeOf((*MockAuth)(nil).RequestEmail), auth)
 }
+
+// SaveAdmin mocks base method.
+func (m *MockAuth) SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveAdmin", auth, authorizationEntity)
+	ret0, _ := ret[0].(entity.Auth)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SaveAdmin indicates an expected call of SaveAdmin.
+func (mr *MockAuthMockRecorder) SaveAdmin(auth, authorizationEntity interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveAdmin", reflect.TypeOf((*MockAuth)(nil).SaveAdmin), auth, authorizationEntity)
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"api/domain/entity"
+	"api/domain/entity/types"
 	"api/http/request"
 	"api/http/response"
 	"api/usecase"
@@ -17,6 +18,7 @@ type Auth interface {
 	RequestEmail(ctx echo.Context) error
 	DownloadWithToken(ctx echo.Context) error
 	AdminSignup(ctx echo.Context) error
+	RegisterAdmin(ctx echo.Context) error
 }
 
 type auth struct {
@@ -91,6 +93,37 @@ func (a auth) AdminSignup(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, response.AdminAuth{
 		JWTToken: jwtToken,
 	})
+}
+
+func (a auth) RegisterAdmin(ctx echo.Context) error {
+	req := request.AdminAuth{}
+	if err := ctx.Bind(req); err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
+	}
+	authEntity := entity.Auth{
+		Email:    entity.Email(req.Email),
+		Password: req.Password,
+		Type:     types.TypeAdmin,
+	}
+
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
+	authorizationEntity := entity.Authorization{
+		JWTKey:   jwtKey,
+		JWTToken: jwtToken,
+	}
+
+	auth, err := a.authUseCase.SaveAdmin(authEntity, authorizationEntity)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
+	}
+
+	return ctx.JSON(http.StatusCreated, auth)
+
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

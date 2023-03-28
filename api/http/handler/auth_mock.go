@@ -48,6 +48,20 @@ func (mr *MockAuthMockRecorder) AdminSignup(ctx interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignup", reflect.TypeOf((*MockAuth)(nil).AdminSignup), ctx)
 }
 
+// DeleteAdmin mocks base method.
+func (m *MockAuth) DeleteAdmin(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAdmin", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAdmin indicates an expected call of DeleteAdmin.
+func (mr *MockAuthMockRecorder) DeleteAdmin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAdmin", reflect.TypeOf((*MockAuth)(nil).DeleteAdmin), ctx)
+}
+
 // DownloadWithToken mocks base method.
 func (m *MockAuth) DownloadWithToken(ctx echo.Context) error {
 	m.ctrl.T.Helper()

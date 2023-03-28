@@ -41,8 +41,8 @@
 			}
 		},
 		"http/handler/auth_mock.go": {
-			"checksum": "PX+DilLMy6dJsRqC8yXBvA==",
-			"source_checksum": "eqh77JexY7ghym6iw96nSg==",
+			"checksum": "oMFYF63Kt9/VkiT2opoSdA==",
+			"source_checksum": "rOls+8ZPFymtE58ruM+rVQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "http/handler/auth.go",

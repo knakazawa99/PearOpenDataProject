@@ -20,6 +20,7 @@ type Auth interface {
 	AdminSignup(ctx echo.Context) error
 	RegisterAdmin(ctx echo.Context) error
 	GetAdmin(ctx echo.Context) error
+	DeleteAdmin(ctx echo.Context) error
 }
 
 type auth struct {
@@ -142,6 +143,34 @@ func (a auth) GetAdmin(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, authEntities)
+}
+
+func (a auth) DeleteAdmin(ctx echo.Context) error {
+	req := &request.DeleteAdminAuth{}
+	if err := ctx.Bind(req); err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
+	}
+
+	authEntity := entity.Auth{
+		ID: req.ID,
+	}
+
+	jwtToken := ctx.Get("jwtToken").(string)
+	jwtKey := ctx.Get("jwtKey").(string)
+	authorizationEntity := entity.Authorization{
+		JWTKey:   jwtKey,
+		JWTToken: jwtToken,
+	}
+
+	err := a.authUseCase.DeleteAdmin(authEntity, authorizationEntity)
+	if err != nil {
+		errorMessage := fmt.Sprintf("error: %s", err)
+		ctx.Logger().Error(errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
+	}
+	return ctx.JSON(http.StatusNoContent, "")
 }
 
 func NewAuth(authUseCase usecase.Auth) Auth {

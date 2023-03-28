@@ -2,13 +2,14 @@ import axios from 'axios';
 import { Container, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { AdminAuth } from 'components/features/admin_pear/Type';
+
 import Add from 'components/features/admin/Add';
+import Delete from 'components/features/admin/Delete';
+import { AdminAuth } from 'components/features/admin_pear/Type';
 import { BASE_URL } from 'config/config';
 import router from 'Rotuer';
-import Delete from './Delete';
-import admin from '../../pages/Admin';
 
 type APIAdminAuth = {
   id: number
@@ -68,9 +69,21 @@ const Admin = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Typography align="right">
-            <Add updateFunc={addAdminAuth}/>
-          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={6}>
+              <Typography align="left">
+                <NavLink to="/admin/versions">
+                  洋ナシデータ一覧へ
+                </NavLink>
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography align="right">
+                <Add updateFunc={addAdminAuth}/>
+              </Typography>
+            </Grid>
+          </Grid>
+
           <Typography
             component="h4"
             variant="h5"

@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"api/domain/entity"
+	"api/domain/entity/types"
 	"api/domain/repository"
 	"api/infrastructure/notify"
 )
@@ -113,4 +114,94 @@ func TestAuthInteractor_AdminSignUp(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
+}
+
+func TestAuthInteractor_SaveAdmin(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockAuthRepository := repository.NewMockAuth(ctrl)
+	mockDownloadPearRepository := repository.NewMockDownloadPear(ctrl)
+	mockCacheRepository := repository.NewMockCache(ctrl)
+	mockEmailSender := notify.NewMockEmailSender(ctrl)
+	mockAuthEntity := entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+	mockAuthRepository.EXPECT().SaveAuth(gomock.Any(), gomock.Any()).Return(nil)
+	mockAuthRepository.EXPECT().FindByEmail(gomock.Any(), gomock.Any()).Return(mockAuthEntity, nil)
+	authInteractor := NewAuth(mockAuthRepository, mockDownloadPearRepository, mockCacheRepository, mockEmailSender)
+	requestAuthEntity := entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+	authorizationEntity := entity.Authorization{
+		JWTKey:   "key",
+		JWTToken: "token",
+	}
+
+	result, err := authInteractor.SaveAdmin(requestAuthEntity, authorizationEntity)
+	assert.Nil(t, err)
+	assert.Equal(t, result.Password, mockAuthEntity.Password)
+}
+
+func TestAuthInteractor_GetAdmin(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockAuthRepository := repository.NewMockAuth(ctrl)
+	mockDownloadPearRepository := repository.NewMockDownloadPear(ctrl)
+	mockCacheRepository := repository.NewMockCache(ctrl)
+	mockEmailSender := notify.NewMockEmailSender(ctrl)
+	mockAuthEntities := make([]entity.Auth, 2)
+	mockAuthEntities[0] = entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+	mockAuthEntities[1] = entity.Auth{
+		Email:    entity.Email("test2@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+
+	mockAuthRepository.EXPECT().FindByType(gomock.Any(), gomock.Any()).Return(mockAuthEntities, nil)
+	mockCacheRepository.EXPECT().Get(gomock.Any()).Return("token", nil)
+	authInteractor := NewAuth(mockAuthRepository, mockDownloadPearRepository, mockCacheRepository, mockEmailSender)
+	authorizationEntity := entity.Authorization{
+		JWTKey:   "key",
+		JWTToken: "token",
+	}
+	result, err := authInteractor.GetAdmin(authorizationEntity)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(result))
+}
+
+func TestAuthInteractor_DeleteAdmin(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockAuthRepository := repository.NewMockAuth(ctrl)
+	mockDownloadPearRepository := repository.NewMockDownloadPear(ctrl)
+	mockCacheRepository := repository.NewMockCache(ctrl)
+	mockEmailSender := notify.NewMockEmailSender(ctrl)
+
+	mockAuthRepository.EXPECT().Delete(gomock.Any(), gomock.Any()).Return(nil)
+	mockCacheRepository.EXPECT().Get(gomock.Any()).Return("token", nil)
+	authInteractor := NewAuth(mockAuthRepository, mockDownloadPearRepository, mockCacheRepository, mockEmailSender)
+
+	authEntity := entity.Auth{
+		Email:    entity.Email("test@gmail.com"),
+		Token:    "hoge1",
+		Password: "hogehoge",
+		Type:     types.TypeAdmin,
+	}
+	authorizationEntity := entity.Authorization{
+		JWTKey:   "key",
+		JWTToken: "token",
+	}
+
+	err := authInteractor.DeleteAdmin(authEntity, authorizationEntity)
+	assert.Nil(t, err)
 }

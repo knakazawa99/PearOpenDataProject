@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Container, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import EditFormDialog from 'components/features/admin_pear/EditForm';
 import { AdminVersion } from 'components/features/admin_pear/Type';
@@ -70,9 +71,21 @@ const AdminPear = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Typography align="right">
-            <Upload/>
-          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={6}>
+              <Typography align="left">
+                <NavLink to="/admin/admins">
+                  管理者一覧へ
+                </NavLink>
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography align="right">
+                <Upload />
+              </Typography>
+            </Grid>
+          </Grid>
+
           <Typography
             component="h4"
             variant="h5"

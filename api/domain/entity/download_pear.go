@@ -3,6 +3,7 @@ package entity
 import (
 	"errors"
 	"regexp"
+	"time"
 
 	"api/domain/entity/types"
 )
@@ -27,11 +28,14 @@ func NewDownloadPear(email string, token string, version string) (DownloadPear, 
 	}
 	downloadPear := &DownloadPear{
 		AuthInfo: Auth{
+			0,
 			Email(email),
 			token,
 			types.TypeAdmin,
 			AuthUser{},
 			"",
+			time.Now(),
+			time.Now(),
 		},
 		Version: version,
 	}

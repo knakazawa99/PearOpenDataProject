@@ -1,8 +1,8 @@
 {
 	"mocks": {
 		"domain/repository/auth_mock.go": {
-			"checksum": "7nuKoov7ELWi92Xf86GRzQ==",
-			"source_checksum": "zPHx6y7/brL9QT7o3QDwLw==",
+			"checksum": "Tpf8+y6hzFT18jM0LVS6aA==",
+			"source_checksum": "XQikb+HXR/Odud9KLrnWTQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "domain/repository/auth.go",
@@ -41,8 +41,8 @@
 			}
 		},
 		"http/handler/auth_mock.go": {
-			"checksum": "vks5bwYZhf4EibPNtyXv5Q==",
-			"source_checksum": "TjwTFuGQbuYTYtWDX8St+A==",
+			"checksum": "oMFYF63Kt9/VkiT2opoSdA==",
+			"source_checksum": "rOls+8ZPFymtE58ruM+rVQ==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "http/handler/auth.go",
@@ -61,8 +61,8 @@
 			}
 		},
 		"usecase/auth_mock.go": {
-			"checksum": "9yPtcHyQJsDn5YBnJLgTkA==",
-			"source_checksum": "lXuPd2aG+7T+awyn1W3aHw==",
+			"checksum": "+8JM3ZSlM/KfxF9HD+Ayzg==",
+			"source_checksum": "rWYqM9S/Dx5QkPO1YV2KDA==",
 			"mode": "SOURCE_MODE",
 			"source_mode_runner": {
 				"source": "usecase/auth.go",

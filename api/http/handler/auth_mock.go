@@ -48,6 +48,20 @@ func (mr *MockAuthMockRecorder) AdminSignup(ctx interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignup", reflect.TypeOf((*MockAuth)(nil).AdminSignup), ctx)
 }
 
+// DeleteAdmin mocks base method.
+func (m *MockAuth) DeleteAdmin(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAdmin", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAdmin indicates an expected call of DeleteAdmin.
+func (mr *MockAuthMockRecorder) DeleteAdmin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAdmin", reflect.TypeOf((*MockAuth)(nil).DeleteAdmin), ctx)
+}
+
 // DownloadWithToken mocks base method.
 func (m *MockAuth) DownloadWithToken(ctx echo.Context) error {
 	m.ctrl.T.Helper()
@@ -60,6 +74,34 @@ func (m *MockAuth) DownloadWithToken(ctx echo.Context) error {
 func (mr *MockAuthMockRecorder) DownloadWithToken(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadWithToken", reflect.TypeOf((*MockAuth)(nil).DownloadWithToken), ctx)
+}
+
+// GetAdmin mocks base method.
+func (m *MockAuth) GetAdmin(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAdmin", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetAdmin indicates an expected call of GetAdmin.
+func (mr *MockAuthMockRecorder) GetAdmin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdmin", reflect.TypeOf((*MockAuth)(nil).GetAdmin), ctx)
+}
+
+// RegisterAdmin mocks base method.
+func (m *MockAuth) RegisterAdmin(ctx echo.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterAdmin", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterAdmin indicates an expected call of RegisterAdmin.
+func (mr *MockAuthMockRecorder) RegisterAdmin(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterAdmin", reflect.TypeOf((*MockAuth)(nil).RegisterAdmin), ctx)
 }
 
 // RequestEmail mocks base method.

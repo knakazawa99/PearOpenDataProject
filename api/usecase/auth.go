@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"api/domain/entity"
+	"api/domain/entity/types"
 	"api/domain/repository"
 	"api/infrastructure/notify"
 	"api/utils"
@@ -16,6 +17,9 @@ type Auth interface {
 	RequestEmail(auth entity.Auth) error
 	DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
 	AdminSignUp(auth entity.Auth) (string, error)
+	SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error)
+	GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error)
+	DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error
 }
 
 type authInteractor struct {
@@ -90,6 +94,80 @@ func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (a authInteractor) SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+
+	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return entity.Auth{}, err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return entity.Auth{}, errors.New("incorrect jwt token")
+	}
+
+	auth.Password, err = utils.PasswordEncrypt(auth.Password)
+	if err != nil {
+		return entity.Auth{}, err
+	}
+
+	if err := a.authRepository.SaveAuth(db, auth); err != nil {
+		return entity.Auth{}, err
+	}
+	resultAuth, err := a.authRepository.FindByEmail(db, auth.Email)
+	if err != nil {
+		return entity.Auth{}, err
+	}
+	messageContent := "管理者のアカウントを追加しました。\n\nパスワードは管理者に聞いてください。"
+	if err = a.emailSender.Send(notify.EmailDTO{Email: string(auth.Email), MessageContent: messageContent}); err != nil {
+		return entity.Auth{}, err
+	}
+
+	return resultAuth, nil
+}
+
+func (a authInteractor) GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error) {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+
+	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return []entity.Auth{}, err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return []entity.Auth{}, errors.New("incorrect jwt token")
+	}
+
+	authEntities, err := a.authRepository.FindByType(db, types.TypeAdmin)
+	if err != nil {
+		return []entity.Auth{}, err
+	}
+	return authEntities, nil
+}
+
+func (a authInteractor) DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error {
+	db, _ := utils.ConnectDB()
+	dbForClose, _ := db.DB()
+	defer dbForClose.Close()
+
+	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
+	if err != nil {
+		return err
+	}
+	if jwtToken != authorizationEntity.JWTToken {
+		return errors.New("incorrect jwt token")
+	}
+
+	auth.Type = types.TypeAdmin
+	if err := a.authRepository.Delete(db, auth); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewAuth(authRepository repository.Auth, downloadPearRepository repository.DownloadPear, cacheRepository repository.Cache, emailSender notify.EmailSender) Auth {

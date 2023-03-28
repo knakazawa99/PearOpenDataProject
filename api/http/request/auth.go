@@ -16,3 +16,7 @@ type AdminAuth struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type DeleteAdminAuth struct {
+	ID int `param:"id"`
+}

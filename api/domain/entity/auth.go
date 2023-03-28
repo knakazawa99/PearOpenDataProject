@@ -3,16 +3,21 @@ package entity
 import (
 	"errors"
 	"regexp"
+	"time"
 
 	"api/domain/entity/types"
 )
 
 type Auth struct {
-	Email    Email
-	Token    string
-	Type     types.AuthType
-	User     AuthUser
-	Password string
+	// FIXME: json の情報をresponseに移す
+	ID        int            `json:"id"`
+	Email     Email          `json:"email"`
+	Token     string         `json:"token"`
+	Type      types.AuthType `json:"type"`
+	User      AuthUser       `json:"user"`
+	Password  string         `json:"password"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 func NewAuth(organization string, name string, email string) (Auth, error) {

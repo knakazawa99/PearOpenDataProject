@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 
 	"api/domain/entity"
 	"api/domain/entity/types"
@@ -117,4 +118,41 @@ func TestAuth_FindByType(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, gormAuthInformation.ID, authEntities[0].ID)
 	assert.Equal(t, 1, len(authEntities))
+}
+
+func TestAuth_Delete(t *testing.T) {
+	db := testutil.DB()
+	defer testutil.CloseDB(db)
+
+	testutil.TruncateTables(db, []interface{}{
+		&gormmodel.GormAuthInformation{},
+		&gormmodel.GormAdminInformation{},
+	})
+
+	gormAuthInformation := gormmodel.GormAuthInformation{
+		ID:       1,
+		Email:    "test@gmail.com",
+		AuthType: "admin",
+	}
+	gormAdminInformation := gormmodel.GormAdminInformation{
+		ID:                1,
+		AuthInformationID: 1,
+		Password:          "hogehoge",
+	}
+	db.Create(&gormAuthInformation)
+	db.Create(&gormAdminInformation)
+
+	authEntity := entity.Auth{
+		ID:       1,
+		Email:    entity.Email("test@gmail.com"),
+		Type:     types.TypeAdmin,
+		Password: "hogehoge",
+	}
+
+	authRepository := NewAuth()
+	err := authRepository.Delete(db, authEntity)
+	assert.Nil(t, err)
+	var deletedGormAuthInformation gormmodel.GormAuthInformation
+	err = db.First(&deletedGormAuthInformation, 1).Error
+	assert.Equal(t, gorm.ErrRecordNotFound.Error(), err.Error())
 }

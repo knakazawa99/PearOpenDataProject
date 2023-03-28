@@ -131,6 +131,24 @@ func (a auth) FindByType(db *gorm.DB, authType types.AuthType) ([]entity.Auth, e
 	return authEntities, nil
 }
 
+func (a auth) Delete(db *gorm.DB, auth entity.Auth) error {
+	if auth.Type == types.TypeAdmin {
+		var gormAdminInformation gormmodel.GormAdminInformation
+		if err := db.Where("auth_information_id = ?", auth.ID).Take(&gormAdminInformation).Error; err != nil {
+			return err
+		}
+		if err := db.Delete(&gormmodel.GormAdminInformation{}, gormAdminInformation.ID).Error; err != nil {
+			return err
+		}
+		if err := db.Delete(&gormmodel.GormAuthInformation{}, auth.ID).Error; err != nil {
+			return err
+		}
+		return nil
+	}
+
+	return errors.New("this func has not been implemented")
+}
+
 func NewAuth() repository.Auth {
 	return &auth{}
 }

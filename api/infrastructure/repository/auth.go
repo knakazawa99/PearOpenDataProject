@@ -109,6 +109,24 @@ func (a auth) FindByEmail(db *gorm.DB, email entity.Email) (entity.Auth, error) 
 	}, nil
 }
 
+func (a auth) FindByType(db *gorm.DB, authType types.AuthType) ([]entity.Auth, error) {
+	var gormAuthInformation []gormmodel.GormAuthInformation
+	if err := db.Where("auth_type = ?", authType).Find(&gormAuthInformation).Error; err != nil {
+		return []entity.Auth{}, err
+	}
+	authEntities := make([]entity.Auth, len(gormAuthInformation))
+	for i, gormAuth := range gormAuthInformation {
+		authEntities[i] = entity.Auth{
+			ID:        gormAuth.ID,
+			Email:     entity.Email(gormAuth.Email),
+			CreatedAt: gormAuth.CreatedAt,
+			UpdatedAt: gormAuth.UpdatedAt,
+		}
+	}
+
+	return authEntities, nil
+}
+
 func NewAuth() repository.Auth {
 	return &auth{}
 }

@@ -89,3 +89,30 @@ func TestAuth_FindByEmail(t *testing.T) {
 	authEntity, _ := authRepository.FindByEmail(db, entity.Email("test@gmail.com"))
 	assert.Equal(t, authEntity.Email, entity.Email("test@gmail.com"))
 }
+
+func TestAuth_FindByType(t *testing.T) {
+	db := testutil.DB()
+	defer testutil.CloseDB(db)
+
+	testutil.TruncateTables(db, []interface{}{
+		&gormmodel.GormAuthInformation{},
+	})
+
+	gormAuthInformation := gormmodel.GormAuthInformation{
+		ID:       1,
+		Email:    "test@gmail.com",
+		AuthType: "admin",
+	}
+	gormAuthInformation2 := gormmodel.GormAuthInformation{
+		ID:       2,
+		Email:    "test@gmail.com",
+		AuthType: "user",
+	}
+	db.Create(&gormAuthInformation)
+	db.Create(&gormAuthInformation2)
+	authRepository := NewAuth()
+	authEntities, err := authRepository.FindByType(db, types.TypeAdmin)
+	assert.Nil(t, err)
+	assert.Equal(t, gormAuthInformation.ID, authEntities[0].ID)
+	assert.Equal(t, 1, len(authEntities))
+}

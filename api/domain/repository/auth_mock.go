@@ -6,6 +6,7 @@ package repository
 
 import (
 	entity "api/domain/entity"
+	types "api/domain/entity/types"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -48,6 +49,21 @@ func (m *MockAuth) FindByEmail(db *gorm.DB, auth entity.Email) (entity.Auth, err
 func (mr *MockAuthMockRecorder) FindByEmail(db, auth interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*MockAuth)(nil).FindByEmail), db, auth)
+}
+
+// FindByType mocks base method.
+func (m *MockAuth) FindByType(db *gorm.DB, authType types.AuthType) ([]entity.Auth, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByType", db, authType)
+	ret0, _ := ret[0].([]entity.Auth)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByType indicates an expected call of FindByType.
+func (mr *MockAuthMockRecorder) FindByType(db, authType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByType", reflect.TypeOf((*MockAuth)(nil).FindByType), db, authType)
 }
 
 // SaveAuth mocks base method.

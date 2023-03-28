@@ -3,16 +3,20 @@ package entity
 import (
 	"errors"
 	"regexp"
+	"time"
 
 	"api/domain/entity/types"
 )
 
 type Auth struct {
-	Email    Email
-	Token    string
-	Type     types.AuthType
-	User     AuthUser
-	Password string
+	ID        int
+	Email     Email
+	Token     string
+	Type      types.AuthType
+	User      AuthUser
+	Password  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func NewAuth(organization string, name string, email string) (Auth, error) {

@@ -7,6 +7,8 @@ import { AdminAuth } from 'components/features/admin_pear/Type';
 import Add from 'components/features/admin/Add';
 import { BASE_URL } from 'config/config';
 import router from 'Rotuer';
+import Delete from './Delete';
+import admin from '../../pages/Admin';
 
 type APIAdminAuth = {
   id: number
@@ -43,19 +45,13 @@ const Admin = () => {
     fetchData()
   }, [])
 
-  const updateAdminAuth = (adminAuth: AdminAuth) => {
+  const deleteAdminAuth = (adminAuth: AdminAuth) => {
     if (!adminAuths) {
       return
     }
-    const afterAdminAuths = [...adminAuths]
-    for (let i =0; i<adminAuths?.length; i++) {
-      if (adminAuth.id == adminAuths[i].id) {
-        adminAuths[i].id = adminAuth.id
-        adminAuths[i].email = adminAuth.email
-        adminAuths[i].email = adminAuth.email
-        break
-      }
-    }
+    const afterAdminAuths = adminAuths.filter((beforeAdminAuth) => {
+      return beforeAdminAuth.id != adminAuth.id
+    })
     setAdminAuths(afterAdminAuths)
   }
 
@@ -100,8 +96,7 @@ const Admin = () => {
                   <TableCell>{adminAuth.email}</TableCell>
                   <TableCell align="right">{adminAuth.createdAt.getFullYear() + "." + adminAuth.createdAt.getMonth() + "." + adminAuth.createdAt.getDate()}</TableCell>
                   <TableCell　align="right">
-                    削除
-                    {/*<EditFormDialog key={adminVersion.id}  adminVersion={adminVersion} updateFunc={updateAdminVersionInformation} />*/}
+                    <Delete key={adminAuth.id}  adminAuth={adminAuth} updateFunc={deleteAdminAuth} />
                   </TableCell>
                 </TableRow>
               ))}

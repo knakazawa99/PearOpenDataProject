@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 
 	"api/domain/entity"
 	"api/domain/entity/types"
@@ -29,7 +30,8 @@ func TestAuthInteractor_RequestEmail(t *testing.T) {
 	authEntity := entity.Auth{
 		Email: entity.Email("test@gmail.com"),
 	}
-	err := authInteractor.RequestEmail(authEntity)
+	db := &gorm.DB{}
+	err := authInteractor.RequestEmail(db, authEntity)
 	assert.Nil(t, err)
 }
 
@@ -60,7 +62,8 @@ func TestAuthInteractor_DownloadWithToken_InvalidToken(t *testing.T) {
 		Version: "1.0.0",
 	}
 	expectedResult := mockDownloadPear
-	result, err := authInteractor.DownloadWithToken(inputDownloadPear)
+	db := &gorm.DB{}
+	result, err := authInteractor.DownloadWithToken(db, inputDownloadPear)
 	assert.Nil(t, err)
 	assert.Equal(t, result.Version, expectedResult.Version)
 }
@@ -85,7 +88,8 @@ func TestAuthInteractor_DownloadWithToken(t *testing.T) {
 		},
 		Version: "1.0.0",
 	}
-	_, err := authInteractor.DownloadWithToken(inputDownloadPear)
+	db := &gorm.DB{}
+	_, err := authInteractor.DownloadWithToken(db, inputDownloadPear)
 	assert.NotNil(t, err)
 }
 
@@ -110,7 +114,8 @@ func TestAuthInteractor_AdminSignUp(t *testing.T) {
 		Password: "hogehoge",
 	}
 
-	result, err := authInteractor.AdminSignUp(requestAuth)
+	db := &gorm.DB{}
+	result, err := authInteractor.AdminSignUp(db, requestAuth)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
@@ -142,7 +147,8 @@ func TestAuthInteractor_SaveAdmin(t *testing.T) {
 		JWTToken: "token",
 	}
 
-	result, err := authInteractor.SaveAdmin(requestAuthEntity, authorizationEntity)
+	db := &gorm.DB{}
+	result, err := authInteractor.SaveAdmin(db, requestAuthEntity, authorizationEntity)
 	assert.Nil(t, err)
 	assert.Equal(t, result.Password, mockAuthEntity.Password)
 }
@@ -174,7 +180,8 @@ func TestAuthInteractor_GetAdmin(t *testing.T) {
 		JWTKey:   "key",
 		JWTToken: "token",
 	}
-	result, err := authInteractor.GetAdmin(authorizationEntity)
+	db := &gorm.DB{}
+	result, err := authInteractor.GetAdmin(db, authorizationEntity)
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
@@ -202,6 +209,7 @@ func TestAuthInteractor_DeleteAdmin(t *testing.T) {
 		JWTToken: "token",
 	}
 
-	err := authInteractor.DeleteAdmin(authEntity, authorizationEntity)
+	db := &gorm.DB{}
+	err := authInteractor.DeleteAdmin(db, authEntity, authorizationEntity)
 	assert.Nil(t, err)
 }

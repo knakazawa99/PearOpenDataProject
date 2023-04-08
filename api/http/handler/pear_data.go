@@ -11,6 +11,7 @@ import (
 	"api/domain/entity"
 	"api/http/request"
 	"api/usecase"
+	"api/utils"
 )
 
 type PearData interface {
@@ -25,7 +26,8 @@ type pearData struct {
 }
 
 func (p pearData) GetPearVersions(ctx echo.Context) error {
-	pearVersion, err := p.pearUseCase.GetDataVersions()
+	db := utils.GetDBFromContext(ctx)
+	pearVersion, err := p.pearUseCase.GetDataVersions(db)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -35,7 +37,8 @@ func (p pearData) GetPearVersions(ctx echo.Context) error {
 }
 
 func (p pearData) GetAdminPearVersions(ctx echo.Context) error {
-	pearVersion, err := p.pearUseCase.GetAdminDataVersions()
+	db := utils.GetDBFromContext(ctx)
+	pearVersion, err := p.pearUseCase.GetAdminDataVersions(db)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -64,7 +67,9 @@ func (p pearData) UpdateAdminPear(ctx echo.Context) error {
 		JWTKey:   jwtKey,
 		JWTToken: jwtToken,
 	}
-	if err := p.pearUseCase.UpdateAdminData(pearEntity, authorizationEntity); err != nil {
+
+	db := utils.GetDBFromContext(ctx)
+	if err := p.pearUseCase.UpdateAdminData(db, pearEntity, authorizationEntity); err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusInternalServerError, errorMessage)
@@ -94,7 +99,8 @@ func (p pearData) UploadPear(ctx echo.Context) error {
 		JWTToken: jwtToken,
 	}
 
-	createdPearEntity, err := p.pearUseCase.CreateData(pearEntity, authorizationEntity)
+	db := utils.GetDBFromContext(ctx)
+	createdPearEntity, err := p.pearUseCase.CreateData(db, pearEntity, authorizationEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

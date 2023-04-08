@@ -35,7 +35,7 @@ func TestPearData_GetPearVersions(t *testing.T) {
 		ReleaseNote: "release",
 		CreatedAt:   time.Now(),
 	}
-	mockPearUseCase.EXPECT().GetDataVersions().Return(mockPearDataVersionOutputs, nil)
+	mockPearUseCase.EXPECT().GetDataVersions(gomock.Any()).Return(mockPearDataVersionOutputs, nil)
 	handler := NewPearData(mockPearUseCase)
 
 	err := handler.GetPearVersions(c)

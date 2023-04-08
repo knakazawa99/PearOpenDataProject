@@ -3,18 +3,19 @@ package usecase
 import (
 	"errors"
 
+	"gorm.io/gorm"
+
 	"api/domain/entity"
 	"api/domain/presenter"
 	"api/domain/repository"
 	"api/http/response"
-	"api/utils"
 )
 
 type Pear interface {
-	GetDataVersions() ([]response.PearDataVersionOutput, error)
-	GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error)
-	UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error
-	CreateData(pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error)
+	GetDataVersions(db *gorm.DB) ([]response.PearDataVersionOutput, error)
+	GetAdminDataVersions(db *gorm.DB) ([]response.PearAdminDataVersionOutput, error)
+	UpdateAdminData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) error
+	CreateData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error)
 }
 
 type pearDataInteractor struct {
@@ -23,10 +24,7 @@ type pearDataInteractor struct {
 	pearVersionPresenter presenter.PearVersion
 }
 
-func (p pearDataInteractor) GetDataVersions() ([]response.PearDataVersionOutput, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
+func (p pearDataInteractor) GetDataVersions(db *gorm.DB) ([]response.PearDataVersionOutput, error) {
 	pears, err := p.pearRepository.FindReleasedPears(db)
 	if err != nil {
 		return []response.PearDataVersionOutput{}, err
@@ -34,10 +32,7 @@ func (p pearDataInteractor) GetDataVersions() ([]response.PearDataVersionOutput,
 	return p.pearVersionPresenter.OutPutPearVersions(pears), nil
 }
 
-func (p pearDataInteractor) GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
+func (p pearDataInteractor) GetAdminDataVersions(db *gorm.DB) ([]response.PearAdminDataVersionOutput, error) {
 	pears, err := p.pearRepository.FindPears(db)
 	if err != nil {
 		return []response.PearAdminDataVersionOutput{}, err
@@ -45,11 +40,7 @@ func (p pearDataInteractor) GetAdminDataVersions() ([]response.PearAdminDataVers
 	return p.pearVersionPresenter.OutPutPearAdminVersions(pears), nil
 }
 
-func (p pearDataInteractor) UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
-
+func (p pearDataInteractor) UpdateAdminData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
 	jwtToken, err := p.cacheRepository.Get(authorizationEntity.JWTKey)
 	if err != nil {
 		return err
@@ -64,11 +55,7 @@ func (p pearDataInteractor) UpdateAdminData(pearEntity entity.Pear, authorizatio
 	return nil
 }
 
-func (p pearDataInteractor) CreateData(pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
-
+func (p pearDataInteractor) CreateData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error) {
 	jwtToken, err := p.cacheRepository.Get(authorizationEntity.JWTKey)
 	if err != nil {
 		return entity.Pear{}, err

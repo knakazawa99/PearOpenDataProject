@@ -10,6 +10,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	gorm "gorm.io/gorm"
 )
 
 // MockPear is a mock of Pear interface.
@@ -36,60 +37,60 @@ func (m *MockPear) EXPECT() *MockPearMockRecorder {
 }
 
 // CreateData mocks base method.
-func (m *MockPear) CreateData(pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error) {
+func (m *MockPear) CreateData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) (entity.Pear, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateData", pearEntity, authorizationEntity)
+	ret := m.ctrl.Call(m, "CreateData", db, pearEntity, authorizationEntity)
 	ret0, _ := ret[0].(entity.Pear)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateData indicates an expected call of CreateData.
-func (mr *MockPearMockRecorder) CreateData(pearEntity, authorizationEntity interface{}) *gomock.Call {
+func (mr *MockPearMockRecorder) CreateData(db, pearEntity, authorizationEntity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateData", reflect.TypeOf((*MockPear)(nil).CreateData), pearEntity, authorizationEntity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateData", reflect.TypeOf((*MockPear)(nil).CreateData), db, pearEntity, authorizationEntity)
 }
 
 // GetAdminDataVersions mocks base method.
-func (m *MockPear) GetAdminDataVersions() ([]response.PearAdminDataVersionOutput, error) {
+func (m *MockPear) GetAdminDataVersions(db *gorm.DB) ([]response.PearAdminDataVersionOutput, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAdminDataVersions")
+	ret := m.ctrl.Call(m, "GetAdminDataVersions", db)
 	ret0, _ := ret[0].([]response.PearAdminDataVersionOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAdminDataVersions indicates an expected call of GetAdminDataVersions.
-func (mr *MockPearMockRecorder) GetAdminDataVersions() *gomock.Call {
+func (mr *MockPearMockRecorder) GetAdminDataVersions(db interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdminDataVersions", reflect.TypeOf((*MockPear)(nil).GetAdminDataVersions))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdminDataVersions", reflect.TypeOf((*MockPear)(nil).GetAdminDataVersions), db)
 }
 
 // GetDataVersions mocks base method.
-func (m *MockPear) GetDataVersions() ([]response.PearDataVersionOutput, error) {
+func (m *MockPear) GetDataVersions(db *gorm.DB) ([]response.PearDataVersionOutput, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDataVersions")
+	ret := m.ctrl.Call(m, "GetDataVersions", db)
 	ret0, _ := ret[0].([]response.PearDataVersionOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetDataVersions indicates an expected call of GetDataVersions.
-func (mr *MockPearMockRecorder) GetDataVersions() *gomock.Call {
+func (mr *MockPearMockRecorder) GetDataVersions(db interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataVersions", reflect.TypeOf((*MockPear)(nil).GetDataVersions))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataVersions", reflect.TypeOf((*MockPear)(nil).GetDataVersions), db)
 }
 
 // UpdateAdminData mocks base method.
-func (m *MockPear) UpdateAdminData(pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
+func (m *MockPear) UpdateAdminData(db *gorm.DB, pearEntity entity.Pear, authorizationEntity entity.Authorization) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAdminData", pearEntity, authorizationEntity)
+	ret := m.ctrl.Call(m, "UpdateAdminData", db, pearEntity, authorizationEntity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateAdminData indicates an expected call of UpdateAdminData.
-func (mr *MockPearMockRecorder) UpdateAdminData(pearEntity, authorizationEntity interface{}) *gomock.Call {
+func (mr *MockPearMockRecorder) UpdateAdminData(db, pearEntity, authorizationEntity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminData", reflect.TypeOf((*MockPear)(nil).UpdateAdminData), pearEntity, authorizationEntity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminData", reflect.TypeOf((*MockPear)(nil).UpdateAdminData), db, pearEntity, authorizationEntity)
 }

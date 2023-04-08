@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	gorm "gorm.io/gorm"
 )
 
 // MockAuth is a mock of Auth interface.
@@ -35,89 +36,89 @@ func (m *MockAuth) EXPECT() *MockAuthMockRecorder {
 }
 
 // AdminSignUp mocks base method.
-func (m *MockAuth) AdminSignUp(auth entity.Auth) (string, error) {
+func (m *MockAuth) AdminSignUp(db *gorm.DB, auth entity.Auth) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AdminSignUp", auth)
+	ret := m.ctrl.Call(m, "AdminSignUp", db, auth)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AdminSignUp indicates an expected call of AdminSignUp.
-func (mr *MockAuthMockRecorder) AdminSignUp(auth interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) AdminSignUp(db, auth interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignUp", reflect.TypeOf((*MockAuth)(nil).AdminSignUp), auth)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSignUp", reflect.TypeOf((*MockAuth)(nil).AdminSignUp), db, auth)
 }
 
 // DeleteAdmin mocks base method.
-func (m *MockAuth) DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error {
+func (m *MockAuth) DeleteAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAdmin", auth, authorizationEntity)
+	ret := m.ctrl.Call(m, "DeleteAdmin", db, auth, authorizationEntity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteAdmin indicates an expected call of DeleteAdmin.
-func (mr *MockAuthMockRecorder) DeleteAdmin(auth, authorizationEntity interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) DeleteAdmin(db, auth, authorizationEntity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAdmin", reflect.TypeOf((*MockAuth)(nil).DeleteAdmin), auth, authorizationEntity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAdmin", reflect.TypeOf((*MockAuth)(nil).DeleteAdmin), db, auth, authorizationEntity)
 }
 
 // DownloadWithToken mocks base method.
-func (m *MockAuth) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
+func (m *MockAuth) DownloadWithToken(db *gorm.DB, inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DownloadWithToken", inputDownloadPear)
+	ret := m.ctrl.Call(m, "DownloadWithToken", db, inputDownloadPear)
 	ret0, _ := ret[0].(entity.DownloadPear)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DownloadWithToken indicates an expected call of DownloadWithToken.
-func (mr *MockAuthMockRecorder) DownloadWithToken(inputDownloadPear interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) DownloadWithToken(db, inputDownloadPear interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadWithToken", reflect.TypeOf((*MockAuth)(nil).DownloadWithToken), inputDownloadPear)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadWithToken", reflect.TypeOf((*MockAuth)(nil).DownloadWithToken), db, inputDownloadPear)
 }
 
 // GetAdmin mocks base method.
-func (m *MockAuth) GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error) {
+func (m *MockAuth) GetAdmin(db *gorm.DB, authorizationEntity entity.Authorization) ([]entity.Auth, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAdmin", authorizationEntity)
+	ret := m.ctrl.Call(m, "GetAdmin", db, authorizationEntity)
 	ret0, _ := ret[0].([]entity.Auth)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAdmin indicates an expected call of GetAdmin.
-func (mr *MockAuthMockRecorder) GetAdmin(authorizationEntity interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) GetAdmin(db, authorizationEntity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdmin", reflect.TypeOf((*MockAuth)(nil).GetAdmin), authorizationEntity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdmin", reflect.TypeOf((*MockAuth)(nil).GetAdmin), db, authorizationEntity)
 }
 
 // RequestEmail mocks base method.
-func (m *MockAuth) RequestEmail(auth entity.Auth) error {
+func (m *MockAuth) RequestEmail(db *gorm.DB, auth entity.Auth) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RequestEmail", auth)
+	ret := m.ctrl.Call(m, "RequestEmail", db, auth)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RequestEmail indicates an expected call of RequestEmail.
-func (mr *MockAuthMockRecorder) RequestEmail(auth interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) RequestEmail(db, auth interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestEmail", reflect.TypeOf((*MockAuth)(nil).RequestEmail), auth)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestEmail", reflect.TypeOf((*MockAuth)(nil).RequestEmail), db, auth)
 }
 
 // SaveAdmin mocks base method.
-func (m *MockAuth) SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
+func (m *MockAuth) SaveAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveAdmin", auth, authorizationEntity)
+	ret := m.ctrl.Call(m, "SaveAdmin", db, auth, authorizationEntity)
 	ret0, _ := ret[0].(entity.Auth)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SaveAdmin indicates an expected call of SaveAdmin.
-func (mr *MockAuthMockRecorder) SaveAdmin(auth, authorizationEntity interface{}) *gomock.Call {
+func (mr *MockAuthMockRecorder) SaveAdmin(db, auth, authorizationEntity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveAdmin", reflect.TypeOf((*MockAuth)(nil).SaveAdmin), auth, authorizationEntity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveAdmin", reflect.TypeOf((*MockAuth)(nil).SaveAdmin), db, auth, authorizationEntity)
 }

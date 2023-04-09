@@ -21,7 +21,7 @@ func TestPearDataInteractor_GetDataVersions(t *testing.T) {
 	mockPears[0] = entity.Pear{ID: 1, Version: "1.0.0", FilePath: "hoge/data.zip"}
 	mockPears[1] = entity.Pear{ID: 2, Version: "1.0.0", FilePath: "hoge/data.zip"}
 
-	mockPearRepository.EXPECT().FindPears(gomock.Any()).Return(mockPears, nil)
+	mockPearRepository.EXPECT().FindReleasedPears(gomock.Any()).Return(mockPears, nil)
 	pearVersionPresenter := presenter.NewPearVersion()
 	pearDataInteractor := NewPearData(mockPearRepository, mockCacheRepository, pearVersionPresenter)
 	db := &gorm.DB{}

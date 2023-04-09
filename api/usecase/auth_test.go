@@ -147,6 +147,8 @@ func TestAuthInteractor_SaveAdmin(t *testing.T) {
 		JWTToken: "token",
 	}
 
+	mockCacheRepository.EXPECT().Get(gomock.Any()).Return("token", nil)
+	mockEmailSender.EXPECT().Send(gomock.Any()).Return(nil)
 	db := &gorm.DB{}
 	result, err := authInteractor.SaveAdmin(db, requestAuthEntity, authorizationEntity)
 	assert.Nil(t, err)

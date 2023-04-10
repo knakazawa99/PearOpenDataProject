@@ -40,7 +40,8 @@ func (a auth) RequestEmail(ctx echo.Context) error {
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
 	}
-	err = a.authUseCase.RequestEmail(requestEmailEntity)
+	db := utils.GetDBFromContext(ctx)
+	err = a.authUseCase.RequestEmail(db, requestEmailEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -61,7 +62,8 @@ func (a auth) DownloadWithToken(ctx echo.Context) error {
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
 	}
-	downloadPear, err := a.authUseCase.DownloadWithToken(requestDownLoadWithTokenEntity)
+	db := utils.GetDBFromContext(ctx)
+	downloadPear, err := a.authUseCase.DownloadWithToken(db, requestDownLoadWithTokenEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -85,7 +87,8 @@ func (a auth) AdminSignup(ctx echo.Context) error {
 		ctx.Logger().Error(errorMessage)
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errorMessage)
 	}
-	jwtToken, err := a.authUseCase.AdminSignUp(requestAuthEntity)
+	db := utils.GetDBFromContext(ctx)
+	jwtToken, err := a.authUseCase.AdminSignUp(db, requestAuthEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -117,7 +120,8 @@ func (a auth) RegisterAdmin(ctx echo.Context) error {
 		JWTToken: jwtToken,
 	}
 
-	auth, err := a.authUseCase.SaveAdmin(authEntity, authorizationEntity)
+	db := utils.GetDBFromContext(ctx)
+	auth, err := a.authUseCase.SaveAdmin(db, authEntity, authorizationEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -135,7 +139,8 @@ func (a auth) GetAdmin(ctx echo.Context) error {
 		JWTToken: jwtToken,
 	}
 
-	authEntities, err := a.authUseCase.GetAdmin(authorizationEntity)
+	db := utils.GetDBFromContext(ctx)
+	authEntities, err := a.authUseCase.GetAdmin(db, authorizationEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)
@@ -164,7 +169,8 @@ func (a auth) DeleteAdmin(ctx echo.Context) error {
 		JWTToken: jwtToken,
 	}
 
-	err := a.authUseCase.DeleteAdmin(authEntity, authorizationEntity)
+	db := utils.GetDBFromContext(ctx)
+	err := a.authUseCase.DeleteAdmin(db, authEntity, authorizationEntity)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error: %s", err)
 		ctx.Logger().Error(errorMessage)

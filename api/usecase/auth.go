@@ -14,12 +14,12 @@ import (
 )
 
 type Auth interface {
-	RequestEmail(auth entity.Auth) error
-	DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
-	AdminSignUp(auth entity.Auth) (string, error)
-	SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error)
-	GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error)
-	DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error
+	RequestEmail(db *gorm.DB, auth entity.Auth) error
+	DownloadWithToken(db *gorm.DB, inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error)
+	AdminSignUp(db *gorm.DB, auth entity.Auth) (string, error)
+	SaveAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error)
+	GetAdmin(db *gorm.DB, authorizationEntity entity.Authorization) ([]entity.Auth, error)
+	DeleteAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) error
 }
 
 type authInteractor struct {
@@ -29,11 +29,7 @@ type authInteractor struct {
 	emailSender            notify.EmailSender
 }
 
-func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
-	db, err := utils.ConnectDB()
-	dbForClose, err := db.DB()
-	defer dbForClose.Close()
-
+func (a authInteractor) RequestEmail(db *gorm.DB, authRequest entity.Auth) error {
 	auth, err := a.authRepository.FindByEmail(db, authRequest.Email)
 	if err != nil {
 		if err.Error() != gorm.ErrRecordNotFound.Error() {
@@ -56,10 +52,7 @@ func (a authInteractor) RequestEmail(authRequest entity.Auth) error {
 	return nil
 }
 
-func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
-	db, err := utils.ConnectDB()
-	dbForClose, err := db.DB()
-	defer dbForClose.Close()
+func (a authInteractor) DownloadWithToken(db *gorm.DB, inputDownloadPear entity.DownloadPear) (entity.DownloadPear, error) {
 	auth, err := a.authRepository.FindByEmail(db, inputDownloadPear.AuthInfo.Email)
 	if err != nil {
 		return entity.DownloadPear{}, err
@@ -75,10 +68,7 @@ func (a authInteractor) DownloadWithToken(inputDownloadPear entity.DownloadPear)
 	return downloadPear, nil
 }
 
-func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
+func (a authInteractor) AdminSignUp(db *gorm.DB, requestAuth entity.Auth) (string, error) {
 	auth, err := a.authRepository.FindByEmail(db, requestAuth.Email)
 	if err != nil {
 		return "", err
@@ -96,11 +86,7 @@ func (a authInteractor) AdminSignUp(requestAuth entity.Auth) (string, error) {
 	return token, nil
 }
 
-func (a authInteractor) SaveAdmin(auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
-
+func (a authInteractor) SaveAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) (entity.Auth, error) {
 	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
 	if err != nil {
 		return entity.Auth{}, err
@@ -129,11 +115,7 @@ func (a authInteractor) SaveAdmin(auth entity.Auth, authorizationEntity entity.A
 	return resultAuth, nil
 }
 
-func (a authInteractor) GetAdmin(authorizationEntity entity.Authorization) ([]entity.Auth, error) {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
-
+func (a authInteractor) GetAdmin(db *gorm.DB, authorizationEntity entity.Authorization) ([]entity.Auth, error) {
 	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
 	if err != nil {
 		return []entity.Auth{}, err
@@ -149,11 +131,7 @@ func (a authInteractor) GetAdmin(authorizationEntity entity.Authorization) ([]en
 	return authEntities, nil
 }
 
-func (a authInteractor) DeleteAdmin(auth entity.Auth, authorizationEntity entity.Authorization) error {
-	db, _ := utils.ConnectDB()
-	dbForClose, _ := db.DB()
-	defer dbForClose.Close()
-
+func (a authInteractor) DeleteAdmin(db *gorm.DB, auth entity.Auth, authorizationEntity entity.Authorization) error {
 	jwtToken, err := a.cacheRepository.Get(authorizationEntity.JWTKey)
 	if err != nil {
 		return err

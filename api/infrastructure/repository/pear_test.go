@@ -22,12 +22,14 @@ func TestPear_FindReleasedPears(t *testing.T) {
 
 	testPearData := make([]gormmodel.GormPear, 2)
 	testPearData[0] = gormmodel.GormPear{
-		Version:  "1.0.0",
-		FilePath: "test.zip",
+		Version:     "1.0.0",
+		FilePath:    "test.zip",
+		ReleaseFlag: true,
 	}
 	testPearData[1] = gormmodel.GormPear{
-		Version:  "1.0.1",
-		FilePath: "test.zip",
+		Version:     "1.0.1",
+		FilePath:    "test.zip",
+		ReleaseFlag: true,
 	}
 	db.Create(&testPearData)
 	pears, err := pearRepository.FindReleasedPears(db)

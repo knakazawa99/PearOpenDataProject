@@ -20,7 +20,8 @@ type Handler struct {
 }
 
 type Middleware struct {
-	Auth middleware.Auth
+	Auth         middleware.Auth
+	DBConnection middleware.DB
 }
 
 func NewHandler(ctx context.Context) (Handler, error) {
@@ -44,13 +45,14 @@ func NewHandler(ctx context.Context) (Handler, error) {
 
 func NewMiddleware() (Middleware, error) {
 	return Middleware{
-		Auth: middleware.NewAuth(),
+		Auth:         middleware.NewAuth(),
+		DBConnection: middleware.NewDB(),
 	}, nil
 }
 
 func V1(handler Handler, m Middleware, e *echo.Echo) {
 
-	v1 := e.Group("/v1")
+	v1 := e.Group("/v1", m.DBConnection.Connection)
 
 	example := v1.Group("/example")
 	example.GET("/:id", handler.Example.Get)

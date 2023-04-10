@@ -56,7 +56,7 @@ func TestDownloadWithToken(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	mockAuthUseCase := usecase.NewMockAuth(ctrl)
-	mockAuthUseCase.EXPECT().DownloadWithToken(gomock.Any()).Return(entity.DownloadPear{
+	mockAuthUseCase.EXPECT().DownloadWithToken(gomock.Any(), gomock.Any()).Return(entity.DownloadPear{
 		AuthInfo: entity.Auth{},
 		FileName: "test.zip",
 		Version:  "1.0.0",
